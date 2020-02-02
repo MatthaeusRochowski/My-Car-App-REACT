@@ -4,8 +4,8 @@ import { Alert, Form, Button } from "react-bootstrap";
 
 class Login extends Component {
   state = {
-    username: "",
-    password: "",
+    username: "Matthäus",
+    password: "12345678",
     error: ""
   };
 
@@ -28,8 +28,8 @@ class Login extends Component {
         // no error
         // lift the data up to the App state
         this.props.setUser(data);
-        // redirect to "/projects"
-        this.props.history.push("/projects");
+        // redirect to "/mycars"
+        this.props.history.push("/myCars");
       }
     });
   };

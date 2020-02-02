@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Startpage from "./components/Startpage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import MyCars from "./components/MyCars";
 
 class App extends React.Component {
   state = {
@@ -17,8 +18,16 @@ class App extends React.Component {
     });
   };
 
+  myCarsRoute = props => {
+    if (this.state.user) {
+      return <MyCars {...props} user={this.state.user} />;
+    } else {
+      return <Redirect to="/" />;
+    }
+  }
 
   render() {
+    console.log("App -----> rendered")
     return (
       <div className="App">
         <Navbar user={this.state.user} setUser={this.setUser} />
@@ -30,6 +39,7 @@ class App extends React.Component {
           <Route exact path="/login" render={
             props => <Login {...props} setUser={this.setUser} />
           }/>
+          <Route exact path="/myCars" render={this.myCarsRoute}/>
         </Switch>
       </div>
     );
