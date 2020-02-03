@@ -7,6 +7,7 @@ const carSchema = new Schema({
   hersteller: { type: String }, //Honda
   modell: { type: String }, //Civic 1.8
   kraftstoff: { type: String  }, //Benzin
+  verbrauch: { type: String }, // Verbrauch lt. Hersteller oder geschätzter Verbrauch
   leistung_ps: { type: Number }, //140
   erstzulassung_monat: { type: Number }, //1 (Januar)
   erstzulassung_jahr: { type: Number }, //2020
