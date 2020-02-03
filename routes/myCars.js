@@ -4,10 +4,9 @@ const router = express.Router();
 const Car = require("../models/Car");
 const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
-//const outerAPIs = new APIHandler(); 
+//const outerAPIs = new APIHandler();
 
 //const uploadCloud = require("../config/cloudinary.js");
-
 
 // GET /api/myCars
 router.get("/", (req, res) => {
@@ -21,7 +20,6 @@ router.get("/", (req, res) => {
       res.status(500).json(err);
     });
 });
-
 
 // GET /api/mycars/:id
 router.get("/:id", (req, res) => {
@@ -69,8 +67,7 @@ router.post("/", (req, res) => {
       kilometerstand: req.body.kaufdaten.kilometerstand
     },
     kilometerstand: req.body.kaufdaten.kilometerstand,
-    bild: bild,
-    
+    bild: bild
   })
     .then(car => {
       res.json(car);
@@ -82,12 +79,22 @@ router.post("/", (req, res) => {
 
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
-  Car.findByIdAndUpdate(
-    req.params.id,
-    {
-      kennzeichen: req.body.kennzeichen
-    },
-  )
+  Car.findByIdAndUpdate(req.params.id, {
+    kennzeichen: req.body.kennzeichen,
+    hersteller: req.body.hersteller,
+    modell: req.body.modell,
+    erstzulassung_monat: req.body.erstzulassung_monat,
+    erstzulassung_jahr: req.body.erstzulassung_jahr,
+    kraftstoff: req.body.kraftstoff,
+    verbrauch: req.body.verbrauch,
+    leistung_ps: req.body.leistung_ps,
+    kilometerstand: req.body.kilometerstand,
+    kaufdaten: {
+      kaufdatum: req.body.kaufdatum,
+      kaufpreis: req.body.kaufpreis,
+      kilometerstand: req.body.kilometerstand_bei_kauf
+    }
+  })
     .then(car => {
       res.json(car);
     })

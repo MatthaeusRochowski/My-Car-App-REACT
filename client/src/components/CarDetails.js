@@ -6,8 +6,23 @@ export default class CarDetails extends Component {
   state = {
     car: "",
     kaufdaten: "",
+
     kennzeichen: "",
-    editActive: false
+    hersteller: "",
+    modell: "",
+    erstzulassung_monat: "",
+    erstzulassung_jahr: "",
+    kraftstoff: "",
+    verbrauch: "",
+    leistung_ps: "",
+    kilometerstand: "",
+    kaufdatum: "",
+    kaufpreis: "",
+    kilometerstand_bei_kauf: "",
+
+    editActive: false,
+
+    error: ""
   };
 
   getData = () => {
@@ -16,11 +31,23 @@ export default class CarDetails extends Component {
     axios
       .get(`/api/myCars/${id}`)
       .then(response => {
-        console.log(`/api/myCars Response`, response);
+        const res = response.data;
+        console.log(res)
         this.setState({
-          car: response.data,
-          kaufdaten: response.data.kaufdaten,
-          kennzeichen: response.data.kennzeichen
+          car: res,
+          kaufdaten: res.kaufdaten,
+          kennzeichen: res.kennzeichen,
+          hersteller: res.hersteller,
+          modell: res.modell,
+          erstzulassung_monat: res.erstzulassung_monat,
+          erstzulassung_jahr: res.erstzulassung_jahr,
+          kraftstoff: res.kraftstoff,
+          verbrauch: res.verbrauch,
+          leistung_ps: res.leistung_ps,
+          kilometerstand: res.kilometerstand,
+          kaufdatum: res.kaufdaten.kaufdatum,
+          kaufpreis: res.kaufdaten.kaufpreis,
+          kilometerstand_bei_kauf: res.kaufdaten.kilometerstand,
         });
       })
       .catch(err => {
@@ -55,6 +82,19 @@ export default class CarDetails extends Component {
     axios
       .put(`/api/myCars/${id}`, {
         kennzeichen: this.state.kennzeichen,
+        hersteller: this.state.hersteller,
+        modell: this.state.modell,
+        erstzulassung_monat: this.state.erstzulassung_monat,
+        erstzulassung_jahr: this.state.erstzulassung_jahr,
+        kraftstoff: this.state.kraftstoff,
+        verbrauch: this.state.verbrauch,
+        leistung_ps: this.state.leistung_ps,
+        kilometerstand: this.state.kilometerstand,
+        kaufdaten: {
+          kaufdatum: this.state.kaufdatum,
+          kaufpreis: this.state.kaufpreis,
+          kilometerstand: this.state.kilometerstand_bei_kauf
+        }
       })
       .then(response => {
         this.setState({
@@ -73,7 +113,9 @@ export default class CarDetails extends Component {
     //const kaufdaten = this.state.kaufdaten;
     console.log(`CarDetails -----> rendered for car id`, car._id);
 
-    const { kennzeichen } = this.state;
+    const { kennzeichen, hersteller, modell, erstzulassung_monat, 
+      erstzulassung_jahr, kraftstoff, verbrauch, leistung_ps, kilometerstand, 
+      kaufdatum, kaufpreis, kilometerstand_bei_kauf } = this.state;
 
     console.log(this.state.editActive);
 
@@ -97,7 +139,138 @@ export default class CarDetails extends Component {
               id="kennzeichen"
               value={ kennzeichen }
               onChange={ this.handleChange }
-              
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Hersteller:</span>
+          <span>
+            <input
+              type="text"
+              name="hersteller"
+              id="hersteller"
+              value={ hersteller }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Modell:</span>
+          <span>
+            <input
+              type="text"
+              name="modell"
+              id="modell"
+              value={ modell }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Erstzulassung Monat:</span>
+          <span>
+            <input
+              type="text"
+              name="erstzulassung_monat"
+              id="erstzulassung_monat"
+              value={ erstzulassung_monat }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Erstzulassung Jahr:</span>
+          <span>
+            <input
+              type="text"
+              name="erstzulassung_jahr"
+              id="erstzulassung_jahr"
+              value={ erstzulassung_jahr }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Kraftstoff:</span>
+          <span>
+            <input
+              type="text"
+              name="kraftstoff"
+              id="kraftstoff"
+              value={ kraftstoff }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Verbrauch:</span>
+          <span>
+            <input
+              type="text"
+              name="verbrauch"
+              id="verbrauch"
+              value={ verbrauch }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Leistung:</span>
+          <span>
+            <input
+              type="text"
+              name="leistung_ps"
+              id="leistung_ps"
+              value={ leistung_ps }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Kilometerstand:</span>
+          <span>
+            <input
+              type="text"
+              name="kilometerstand"
+              id="kilometerstand"
+              value={ kilometerstand }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Kaufdatum:</span>
+          <span>
+            <input
+              type="text"
+              name="kaufdatum"
+              id="kaufdatum"
+              value={ kaufdatum }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Kaufpreis:</span>
+          <span>
+            <input
+              type="text"
+              name="kaufpreis"
+              id="kaufpreis"
+              value={ kaufpreis }
+              onChange={ this.handleChange }
+            />
+          </span>
+        </p>
+        <p className="p-class">
+          <span>Kilometerstand bei Kauf:</span>
+          <span>
+            <input
+              type="text"
+              name="kilometerstand_bei_kauf"
+              id="kilometerstand_bei_kauf"
+              value={ kilometerstand_bei_kauf }
+              onChange={ this.handleChange }
             />
           </span>
         </p>
