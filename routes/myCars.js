@@ -1,7 +1,7 @@
 // Routes to protected car pages
 const express = require("express");
 const router = express.Router();
-const Car = require("../models/Car");
+const Car = require("../models/Car") || require("./models/Car");
 const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
 //const outerAPIs = new APIHandler(); 
