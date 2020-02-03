@@ -27,8 +27,8 @@ class Signup extends Component {
         // no error
         // lift the data up to the App state
         this.props.setUser(data);
-        // redirect to "/projects"
-        this.props.history.push("/projects");
+        // redirect to "/myCars"
+        this.props.history.push("/myCars");
       }
     });
   };
