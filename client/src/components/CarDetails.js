@@ -1,23 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import axios from "axios";
+import { Button, Form } from "react-bootstrap";
 
 export default class CarDetails extends Component {
-
   state = {
-    car: '',
-    kaufdaten: ''
-  }
+    car: "",
+    kaufdaten: "",
+    kennzeichen: "",
+    editActive: false
+  };
 
   getData = () => {
     const id = this.props.match.params.id;
- 
+
     axios
       .get(`/api/myCars/${id}`)
       .then(response => {
         console.log(`/api/myCars Response`, response);
         this.setState({
           car: response.data,
-          kaufdaten: response.data.kaufdaten
+          kaufdaten: response.data.kaufdaten,
+          kennzeichen: response.data.kennzeichen
         });
       })
       .catch(err => {
@@ -32,48 +35,76 @@ export default class CarDetails extends Component {
   componentDidMount() {
     this.getData();
   }
+
+  toggleEdit = () => {
+    this.setState({
+      editActive: !this.state.editActive
+    });
+  };
+
+  handleChange = event => {
+    this.state.editActive &&
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const id = this.props.match.params.id;
+    axios
+      .put(`/api/myCars/${id}`, {
+        kennzeichen: this.state.kennzeichen,
+      })
+      .then(response => {
+        this.setState({
+          car: response.data,
+          editActive: false
+        });
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   render() {
-    
-    const car = this.state.car
-    const kaufdaten = this.state.kaufdaten
-    console.log(`CarDetails -----> rendered for car id`, car._id );
+    const car = this.state.car;
+    //const kaufdaten = this.state.kaufdaten;
+    console.log(`CarDetails -----> rendered for car id`, car._id);
+
+    const { kennzeichen } = this.state;
+
+    console.log(this.state.editActive);
 
     return (
+      <div>
+        <h2>Fahrzeug Details für {car.kennzeichen}</h2>
 
-<div>
+        <Button onClick={ this.toggleEdit }>Fahrzeugdaten ändern</Button>
+        <form onSubmit={ this.handleSubmit }>
 
-<h2>Fahrzeug Details für { car.kennzeichen }</h2>
+        <div className="car-img-div">
+          <img src={ car.bild } className="car-image" alt="Autobild" />
+        </div>
 
-<div className="car-img-div"><img src={ car.bild } className="car-image" alt="Autobild"/></div>
-    <p className="p-class"><span>Kennzeichen:</span><span>{ car.kennzeichen }</span></p>
-    
-    <p className="p-class"><span>Hersteller:</span><span>{ car.hersteller}</span></p>
-    
-    <p className="p-class"><span>Modell:</span><span>{ car.modell }</span></p>
-    
-    <p className="p-class"><span>Erstzulassung:</span><span>{ car.erstzulassung_monat }/{ car.erstzulassung_jahr }</span></p>
-    
-    <p className="p-class"><span>Kraftstoff:</span><span>{ car.kraftstoff }</span></p>
+        <p className="p-class">
+          <span>Kennzeichen:</span>
+          <span>
+            <input
+              type="text"
+              name="kennzeichen"
+              id="kennzeichen"
+              value={ kennzeichen }
+              onChange={ this.handleChange }
+              
+            />
+          </span>
+        </p>
 
-    <p className="p-class"><span>Verbrauch:</span><span>{ car.verbrauch }</span></p>
-
-    <p className="p-class"><span>Leistung:</span><span>{ car.leistung_ps } PS</span></p>
-
-    <p className="p-class"><span>Aktueller Kilometerstand:</span><span>{ car.kilometerstand } km</span></p>
-    
-    <p className="p-class"></p>
-
-    <p className="p-class">Kaufdaten:</p>
-
-    <p className="p-class"><span>Kaufdatum:</span><span>{ kaufdaten.kaufdatum }</span></p>
-
-    <p className="p-class"><span>Kaufpreis:</span><span>{ kaufdaten.kaufpreis }</span></p>
-
-    <p className="p-class"><span>Kilometerstand:</span><span>{ kaufdaten.kilometerstand } km</span></p>
-
-
-
-</div>
-    )
+        <Button type="submit">Edit</Button>
+        </form>
+      </div>
+    );
   }
 }

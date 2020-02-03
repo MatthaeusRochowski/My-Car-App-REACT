@@ -80,4 +80,20 @@ router.post("/", (req, res) => {
     });
 });
 
+// PUT /api/myCars/:id
+router.put("/:id", (req, res) => {
+  Car.findByIdAndUpdate(
+    req.params.id,
+    {
+      kennzeichen: req.body.kennzeichen
+    },
+  )
+    .then(car => {
+      res.json(car);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;
