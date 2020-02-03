@@ -16,6 +16,7 @@ const Navbar = props => {
       {props.user ? (
         <div>
           <Link to="/myCars">Mein Fuhrpark</Link>
+          <Link to="/fuelstations">Tankstellen</Link>
           <Link to="/" onClick={handleLogout}>
             Logout
           </Link>
