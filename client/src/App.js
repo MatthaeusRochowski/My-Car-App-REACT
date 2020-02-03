@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import MyCars from "./components/MyCars";
 import AddCar from "./components/AddCar";
+import FuelStations from "./components/FuelStations";
 
 
 class App extends React.Component {
@@ -43,6 +44,7 @@ class App extends React.Component {
           }/>
           <Route exact path="/myCars" render={this.myCarsRoute}/>
           <Route exact path="/addCar" component={AddCar}/>
+          <Route exact path="/fuelstations" component={FuelStations} />
         </Switch>
       </div>
     );
