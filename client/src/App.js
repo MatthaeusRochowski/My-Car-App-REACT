@@ -6,6 +6,8 @@ import Startpage from "./components/Startpage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import MyCars from "./components/MyCars";
+import AddCar from "./components/AddCar";
+
 
 class App extends React.Component {
   state = {
@@ -40,6 +42,7 @@ class App extends React.Component {
             props => <Login {...props} setUser={this.setUser} />
           }/>
           <Route exact path="/myCars" render={this.myCarsRoute}/>
+          <Route exact path="/addCar" component={AddCar}/>
         </Switch>
       </div>
     );
