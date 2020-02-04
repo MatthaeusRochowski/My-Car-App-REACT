@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
 import OneFuelStation from './FuelStation_One';
+import MapFuelStation from './FuelStation_Map';
 
 export default class FuelStations extends Component {
 
@@ -51,6 +52,8 @@ export default class FuelStations extends Component {
     });
 
     let googleMapsUrl = "";
+    let googleMapsMarker2 = {};
+    let googleMapsMarker2Center = {};
     if (currFuelStations.length > 0) {
       let googleMapsMarker = currFuelStations.map((oneFuelStation, index) => {
         if (index === 0) {
@@ -65,6 +68,23 @@ export default class FuelStations extends Component {
           }
         }
       });
+
+      googleMapsMarker2 = currFuelStations.map((oneFuelStation, index) => {
+        if (index === 0) {
+          googleMapsMarker2Center = {lat: oneFuelStation.lat, lng: oneFuelStation.lng};
+          return {index: index, text: oneFuelStation.name, lat: oneFuelStation.lat, lng: oneFuelStation.lng, color: 'red'}
+        }
+        else {
+          if (index%2 === 1) {
+            return {index: index, text: oneFuelStation.name, lat: oneFuelStation.lat, lng: oneFuelStation.lng, color: 'green'}
+          }
+          else {
+            return {index: index, text: oneFuelStation.name, lat: oneFuelStation.lat, lng: oneFuelStation.lng, color: 'blue'}
+          }
+        }
+      });
+      //console.log(googleMapsMarker2Center);
+
       if (this.state.testMode) {
         googleMapsUrl = '';
       }
@@ -82,7 +102,7 @@ export default class FuelStations extends Component {
           <button type="submit">Request</button>
         </form>
         {currFuelStations.length > 0 ? (
-          <img id="google_maps" src={googleMapsUrl} alt='GoogleMaps' />
+          <MapFuelStation center={googleMapsMarker2Center} markers={googleMapsMarker2} />
           ) : (
           console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array) - maps")
         )}
