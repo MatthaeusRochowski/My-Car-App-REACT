@@ -32,11 +32,12 @@ router.get("/:id", (req, res) => {
   }
 
   Car.findById(carId)
-    .populate("eigner_ref")
+  //  .populate("eigner_ref")
     .then(car => {
-      if (!car) {
-        res.status(404).json({ message: "Project not found" });
-      } else res.json(car);
+      res.json(car);
+    //  if (!car) {
+    //    res.status(404).json({ message: "Project not found" });
+     // } else res.json(car);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -46,29 +47,20 @@ router.get("/:id", (req, res) => {
 // POST /api/myCars
 router.post("/", (req, res) => {
   // create 1 car
+  console.log(req);
+ 
+  const { verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps,
+  erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
+   bild, eigner_ref} = req.body;
 
-  const loggedUser = req.session.user;
+   console.log("inside post route", req.body)
 
-  let bild = "/DefaultPlatzhalter.png";
-  if (req.file) bild = req.file.url;
-
-  Car.create({
-    eigner_ref: loggedUser._id,
-    kennzeichen: req.body.kennzeichen,
-    hersteller: req.body.hersteller,
-    modell: req.body.modell,
-    kraftstoff: req.body.kraftstoff,
-    leistung_ps: req.body.leistung,
-    erstzulassung_monat: req.body.erstzulassung_monat,
-    erstzulassung_jahr: req.body.erstzulassung_jahr,
-    kaufdaten: {
-      kaufdatum: req.body.kaufdaten.kaufdatum,
-      kaufpreis: req.body.kaufdaten.kaufpreis,
-      kilometerstand: req.body.kaufdaten.kilometerstand
-    },
-    kilometerstand: req.body.kaufdaten.kilometerstand,
-    bild: bild
-  })
+    Car.create({
+      verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps, 
+      erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
+      bild, eigner_ref
+    })
+    
     .then(car => {
       res.json(car);
     })
@@ -79,8 +71,7 @@ router.post("/", (req, res) => {
 
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
-  //console.log("in servers put router");
-  //console.log(req.body.car);
+
   let car = req.body.car;
   let carId = req.params.id;
 
