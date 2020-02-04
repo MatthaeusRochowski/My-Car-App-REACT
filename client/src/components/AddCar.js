@@ -16,7 +16,7 @@ class AddCar extends Component {
     kaufdaten: {
       kaufdatum: "",
       kaufpreis: "",
-      kilometerstand: ""
+      laufleistung: ""
     },
     kilometerstand: "",
     bild: ""
@@ -55,48 +55,7 @@ class AddCar extends Component {
         console.log(err);
       });
     };
-   /* axios
-      .post("/api/myCars", {
-        eigner_ref: this.state.eigner_ref,
-        kennzeichen: this.state.kennzeichen,
-        hersteller: this.state.hersteller,
-        modell: this.state.modell,
-        kraftstoff: this.state.kraftstoff,
-        leistung_ps: this.state.leistung_ps,
-        erstzulassung_jahr: this.state.erstzulassung_jahr,
-        erstzulassung_monat: this.state.erstzulassung_monat,
-        kaufdaten: {
-          kaufdatum: this.state.kaufdatum,
-          kaufpreis: this.state.kaufpreis,
-          kilometerstand: this.state.kilometerstand
-        },
-        kilometerstand: this.state.kaufdaten.kilometerstand,
-        //bild: this.state.bild
-      })
-      .then(response => {
-        /*this.props.getData();
-        this.setState({
-          eigner_ref: "",
-          kennzeichen: "",
-          hersteller: "",
-          modell: "",
-          kraftstoff: "",
-          leistung_ps: "",
-          erstzulassung_monat: "",
-          erstzulassung_jahr: "",
-          kaufdaten: {
-            kaufdatum: "",
-            kaufpreis: "",
-            kilometerstand: ""
-          },
-          kilometerstand: this.state.kaufdaten.kilometerstand,
-          bild: ""
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }; */
+  
 
   render() {
     console.log("AddCar -----> rendered");
@@ -183,7 +142,7 @@ class AddCar extends Component {
             type="text"
             name="kaufdatum"
             id="kaufdatum"
-            value={this.state.kaufdatum}
+            value={this.state.kaufdaten.kaufdatum}
             onChange={this.handleChange}
             
           />
@@ -192,7 +151,7 @@ class AddCar extends Component {
             type="text"
             name="kaufpreis"
             id="kaufpreis"
-            value={this.state.kaufpreis}
+            value={this.state.kaufdaten.kaufpreis}
             onChange={this.handleChange}
             
           />
@@ -201,7 +160,7 @@ class AddCar extends Component {
             type="text"
             name="kilometerstand"
             id="kilometerstand"
-            value={this.state.kilometerstand}
+            value={this.state.kaufdaten.laufleistung}
             onChange={this.handleChange}
             
           />

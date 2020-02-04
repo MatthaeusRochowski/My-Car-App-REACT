@@ -32,12 +32,12 @@ router.get("/:id", (req, res) => {
   }
 
   Car.findById(carId)
-  //  .populate("eigner_ref")
+    //  .populate("eigner_ref")
     .then(car => {
       res.json(car);
-    //  if (!car) {
-    //    res.status(404).json({ message: "Project not found" });
-     // } else res.json(car);
+      //  if (!car) {
+      //    res.status(404).json({ message: "Project not found" });
+      // } else res.json(car);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -47,57 +47,66 @@ router.get("/:id", (req, res) => {
 // POST /api/myCars
 router.post("/", (req, res) => {
   // create 1 car
-  console.log(req);
- 
-  const { verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps,
-  erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
-   bild, eigner_ref} = req.body;
 
-   console.log("inside post route", req.body)
+  console.log("inside post route", req.body);
 
-    Car.create({
-      verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps, 
-      erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
-      bild, eigner_ref
-    })
+  var car = new Car({
+      kennzeichen: req.body.kennzeichen,
+      hersteller: req.body.hersteller,
+      modell: req.body.modell,
+      kraftstoff: req.body.kraftstoff,
+      verbrauch: req.body.verbrauch,
+      leistung_ps: req.body.leistung_ps,
+      erstzulassung_monat: req.body.erstzulassung_monat,
+      erstzulassung_jahr: req.body.erstzulassung_jahr,
+      kaufpreis: req.body.kaufpreis,
+      kilometerstand: req.body.kilometerstand,
+      kaufdaten: {
+        kaufdatum: req.body.kaufdaten.kaufdatum,
+        kaufpreis: req.body.kaufdaten.kaufpreis,
+        laufleistung: req.body.kaufdaten.laufleistung
+      }
+      })
+
+    car.save()
+        .then(car => {
+          console.log("Car saved")
+          res.json(car);
+        })
+        .catch(err => {
+          res.status(500).json(err);
+        });
     
-    .then(car => {
-      res.json(car);
-    })
-    .catch(err => {
-      res.status(500).json(err);
     });
-});
+
 
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
-
   let car = req.body.car;
   let carId = req.params.id;
 
   Car.findById(carId)
-  .then(returnedCar => {
-    returnedCar.kennzeichen= car.kennzeichen
-    returnedCar.hersteller= car.hersteller
-    returnedCar.modell= car.modell
-    returnedCar.kraftstoff= car.kraftstoff
-    returnedCar.verbrauch= car.verbrauch
-    returnedCar.leistung_ps= car.leistung_ps
-    returnedCar.erstzulassung_monat= car.erstzulassung_monat
-    returnedCar.erstzulassung_jahr= car.erstzulassung_jahr
-    returnedCar.kaufpreis= car.kaufpreis
-    returnedCar.kilometerstand= car.kilometerstand
-    returnedCar.kaufdaten.kaufdatum= car.kaufdaten.kaufdatum
-    returnedCar.kaufdaten.kaufpreis= car.kaufdaten.kaufpreis
-    returnedCar.kaufdaten.laufleistung= car.kaufdaten.laufleistung
-    returnedCar.save()
-    .then(car => {
-      res.json(car);
+    .then(returnedCar => {
+      returnedCar.kennzeichen = car.kennzeichen;
+      returnedCar.hersteller = car.hersteller;
+      returnedCar.modell = car.modell;
+      returnedCar.kraftstoff = car.kraftstoff;
+      returnedCar.verbrauch = car.verbrauch;
+      returnedCar.leistung_ps = car.leistung_ps;
+      returnedCar.erstzulassung_monat = car.erstzulassung_monat;
+      returnedCar.erstzulassung_jahr = car.erstzulassung_jahr;
+      returnedCar.kaufpreis = car.kaufpreis;
+      returnedCar.kilometerstand = car.kilometerstand;
+      returnedCar.kaufdaten.kaufdatum = car.kaufdaten.kaufdatum;
+      returnedCar.kaufdaten.kaufpreis = car.kaufdaten.kaufpreis;
+      returnedCar.kaufdaten.laufleistung = car.kaufdaten.laufleistung;
+      returnedCar.save().then(car => {
+        res.json(car);
+      });
     })
-  })
-  .catch(err => {
-    res.status(500).json(err);
-  });
+    .catch(err => {
+      res.status(500).json(err);
+    });
 });
 
 // DELETE /api/myCars/:id
@@ -108,7 +117,7 @@ router.delete("/:id", (req, res) => {
       // cloudinary.uploader.destroy(car.imagePublicID);
       // Deletes all the documents in the Task collection where the value for the `_id` field is present in the `project.tasks` array
       //return Task.deleteMany({ _id: { $in: project.tasks } }).then(() =>
-        res.json({ message: "ok" })
+      res.json({ message: "ok" });
       //);
     })
     .catch(err => {
