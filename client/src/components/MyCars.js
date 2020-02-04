@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 
 import axios from "axios";
 
-import Car from './Car';
+import Car from "./Car";
 
 export default class MyCars extends Component {
   state = {
@@ -27,27 +27,30 @@ export default class MyCars extends Component {
   componentDidMount() {
     this.getData();
   }
-  
+
   render() {
     console.log("myCars -----> rendered");
-    console.log(this.state.cars)
+    console.log(this.state.cars);
 
     return (
       <div>
-      <h1>Hi {this.props.user.username}</h1>
-      <h3>Dein aktueller Fuhrpark</h3>
+        <h1>Hi {this.props.user.username}</h1>
+        <h3>Dein aktueller Fuhrpark</h3>
         <section id="car-overview">
-        
-        <Link to="/addCar"><Button type="submit">Fahrzeug hinzufügen</Button></Link>
-          <div className="cards-container">
-          {this.state.cars.map(car => {
-            return (
-          
-              <Car key={car._id} car={car} />
-              
-            )
-          })}
+          <Link to="/addCar">
+            <Button type="submit">Fahrzeug hinzufügen</Button>
+          </Link>
 
+          <div className="cards-container">
+            {this.state.cars.map(car => {
+              return (
+                <div key={car._id}>
+                  <Link to={`/myCars/${car._id}`}>
+                    <Car car={car} />
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>

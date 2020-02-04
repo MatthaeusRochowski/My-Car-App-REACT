@@ -4,10 +4,9 @@ const router = express.Router();
 const Car = require("../models/Car");
 const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
-//const outerAPIs = new APIHandler(); 
+//const outerAPIs = new APIHandler();
 
 //const uploadCloud = require("../config/cloudinary.js");
-
 
 // GET /api/myCars
 router.get("/", (req, res) => {
@@ -21,7 +20,6 @@ router.get("/", (req, res) => {
       res.status(500).json(err);
     });
 });
-
 
 // GET /api/mycars/:id
 router.get("/:id", (req, res) => {
@@ -50,17 +48,13 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   // create 1 car
   console.log(req);
-
-  //const loggedUser = req.session.user; 
+ 
   const { verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps,
   erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
    bild, eigner_ref} = req.body;
 
-   //console.log(loggedUser, "status 500")
    console.log("inside post route", req.body)
 
-  //let bild = "../client/build/DefaultPlatzhalter.png";
-  //if (req.file) bild = req.file.url;
     Car.create({
       verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps, 
       erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
@@ -75,31 +69,35 @@ router.post("/", (req, res) => {
     });
 });
 
-  /*Car.create({
-    eigner_ref: loggedUser._id,
-    kennzeichen: req.body.kennzeichen,
-    hersteller: req.body.hersteller,
-    modell: req.body.modell,
-    kraftstoff: req.body.kraftstoff,
-    leistung_ps: req.body.leistung,
-    erstzulassung_monat: req.body.erstzulassung_monat,
-    erstzulassung_jahr: req.body.erstzulassung_jahr,
-    kaufdaten: {
-      kaufdatum: req.body.kaufdaten.kaufdatum,
-      kaufpreis: req.body.kaufdaten.kaufpreis,
-      kilometerstand: req.body.kaufdaten.kilometerstand
-    },
-    kilometerstand: req.body.kaufdaten.kilometerstand,
-    bild: bild,
-    
-  })
+// PUT /api/myCars/:id
+router.put("/:id", (req, res) => {
+
+  let car = req.body.car;
+  let carId = req.params.id;
+
+  Car.findById(carId)
+  .then(returnedCar => {
+    returnedCar.kennzeichen= car.kennzeichen
+    returnedCar.hersteller= car.hersteller
+    returnedCar.modell= car.modell
+    returnedCar.kraftstoff= car.kraftstoff
+    returnedCar.verbrauch= car.verbrauch
+    returnedCar.leistung_ps= car.leistung_ps
+    returnedCar.erstzulassung_monat= car.erstzulassung_monat
+    returnedCar.erstzulassung_jahr= car.erstzulassung_jahr
+    returnedCar.kaufpreis= car.kaufpreis
+    returnedCar.kilometerstand= car.kilometerstand
+    returnedCar.kaufdaten.kaufdatum= car.kaufdaten.kaufdatum
+    returnedCar.kaufdaten.kaufpreis= car.kaufdaten.kaufpreis
+    returnedCar.kaufdaten.laufleistung= car.kaufdaten.laufleistung
+    returnedCar.save()
     .then(car => {
       res.json(car);
     })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-});*/
+  })
+  .catch(err => {
+    res.status(500).json(err);
+  });
+});
 
-console.log("Test car add" , Car)
 module.exports = router;

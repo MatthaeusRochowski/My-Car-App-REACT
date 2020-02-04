@@ -7,6 +7,8 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import MyCars from "./components/MyCars";
 import AddCar from "./components/AddCar";
+import CarDetails from "./components/CarDetails";
+
 import FuelStations from "./components/FuelStations";
 
 
@@ -29,6 +31,8 @@ class App extends React.Component {
     }
   }
 
+  
+
   render() {
     console.log("App -----> rendered")
     return (
@@ -43,10 +47,13 @@ class App extends React.Component {
             props => <Login {...props} setUser={this.setUser} />
           }/>
           <Route exact path="/myCars" render={this.myCarsRoute}/>
-          {/*<Route exact path="/addCar" component={AddCar} />*/}
           <Route exact path="/addCar" render={
             props => <AddCar {...props} user={this.state.user} />
           }/>
+          <Route exact path="/myCars/:id" render={
+            props => <CarDetails user={this.state.user} {...props} />
+          }/>
+          
           <Route exact path="/fuelstations" component={FuelStations} />
         </Switch>
       </div>
