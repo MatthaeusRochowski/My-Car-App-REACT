@@ -14,7 +14,7 @@ const carSchema = new Schema({
   kaufdaten: {
     kaufdatum: {type: String}, //2014-03-01
     kaufpreis: {type: Number}, //20000
-    kilometerstand: {type: Number} //90000
+    laufleistung: {type: Number} //90000
   },
   kilometerstand: { type: Number }, //12000 (updated by most recent kilometerstand_ende)
   bild:                   { type: String }, //http://cloudinary....

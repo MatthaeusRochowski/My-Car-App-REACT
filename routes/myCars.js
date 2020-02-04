@@ -79,20 +79,21 @@ router.post("/", (req, res) => {
 
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
+  console.log(req.body.car);
   Car.findByIdAndUpdate(req.params.id, {
-    kennzeichen: req.body.kennzeichen,
-    hersteller: req.body.hersteller,
-    modell: req.body.modell,
-    erstzulassung_monat: req.body.erstzulassung_monat,
-    erstzulassung_jahr: req.body.erstzulassung_jahr,
-    kraftstoff: req.body.kraftstoff,
-    verbrauch: req.body.verbrauch,
-    leistung_ps: req.body.leistung_ps,
-    kilometerstand: req.body.kilometerstand,
+    kennzeichen: req.body.car.kennzeichen,
+    hersteller: req.body.car.hersteller,
+    modell: req.body.car.modell,
+    kraftstoff: req.body.car.kraftstoff,
+    leistung_ps: req.body.car.leistung_ps,
+    erstzulassung_monat: req.body.car.erstzulassung_monat,
+    erstzulassung_jahr: req.body.car.erstzulassung_jahr,
+    kaufpreis: req.body.car.kaufpreis,
+    kilometerstand: req.body.car.kilometerstand,
     kaufdaten: {
-      kaufdatum: req.body.kaufdatum,
-      kaufpreis: req.body.kaufpreis,
-      kilometerstand: req.body.kilometerstand_bei_kauf
+      kaufdatum: req.body.car.kennzeichen.kaufdatum,
+      kaufpreis: req.body.car.kennzeichen.kaufpreis,
+      laufleistung: req.body.car.kennzeichen.laufleistung
     }
   })
     .then(car => {
