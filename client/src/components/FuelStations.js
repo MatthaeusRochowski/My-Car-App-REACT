@@ -6,7 +6,8 @@ export default class FuelStations extends Component {
 
   state = {
     zip: "",
-    fuelstations: []
+    fuelstations: [],
+    testMode: true
   }
 
   handleInputKeyStrokes = (event) => {
@@ -22,17 +23,56 @@ export default class FuelStations extends Component {
     axios.get(fuelStationRequestUrl)
     .then(response => {
       console.log("Frontend: FuelStations: FuelStations.js - response received: ");
-      //console.log(response.data.stations);
+      //console.log(response.data);
       this.setState({ 
-        fuelstations: response.data.stations
+        fuelstations: response.data.stations,
+        testMode: response.data.testMode
       });
     })
   }
 
   render() {
+    console.log(this.state.testMode);
     console.log("Frontend: FuelStations: FuelStations.js  - render invoked");
-    //console.log("Frontend: FuelStations: FuelStations.js  - fuelstation state:", this.state.fuelstations);
-    let currFuelStations = this.state.fuelstations;
+    //console.log("Frontend: FuelStations: FuelStations.js  - fuelstation state:", this.state.fuelstations, "testMode: " + this.state.testMode);
+    let currFuelStations = this.state.fuelstations
+    currFuelStations.map((oneFuelStation, index) => {
+      if (index === 0) {
+        return oneFuelStation.color = 'red';
+      }
+      else {
+        if (index%2 === 1) {
+          return oneFuelStation.color = 'lightgreen';
+        }
+        else {
+          return oneFuelStation.color = 'lightblue';
+        }
+      }
+    });
+
+    let googleMapsUrl = "";
+    if (currFuelStations.length > 0) {
+      let googleMapsMarker = currFuelStations.map((oneFuelStation, index) => {
+        if (index === 0) {
+          return ("&markers=color:red%7Clabel:" + String(index+1) + "%7C" + oneFuelStation.lat + "," + oneFuelStation.lng)
+        }
+        else {
+          if (index%2 === 1) {
+            return ("&markers=color:green%7Clabel:" + String(index+1) + "%7C" + oneFuelStation.lat + "," + oneFuelStation.lng);
+          }
+          else {
+            return ("&markers=color:blue%7Clabel:" + String(index+1) + "%7C" + oneFuelStation.lat + "," + oneFuelStation.lng);
+          }
+        }
+      });
+      if (this.state.testMode) {
+        googleMapsUrl = '';
+      }
+      else {
+        googleMapsUrl = 'http://maps.googleapis.com/maps/api/staticmap?size=400x400' + googleMapsMarker.join('') + '&key=AIzaSyDPIPUZEpxhHJFKdfVta60o6N25Rvzm7aQ';
+      }
+      console.log(googleMapsUrl);
+    }
     return (
       <div>
         <h1>Nearby Fuelstations</h1>
@@ -41,13 +81,19 @@ export default class FuelStations extends Component {
           <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputKeyStrokes} placeholder="i.e. 85083" />
           <button type="submit">Request</button>
         </form>
+        {currFuelStations.length > 0 ? (
+          <img id="google_maps" src={googleMapsUrl} alt='GoogleMaps' />
+          ) : (
+          console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array) - maps")
+        )}
         <div id="fuelstationAll">
           {currFuelStations.length > 0 ? (
-            currFuelStations.map(oneFuelStation => { return <OneFuelStation key={oneFuelStation.id} {...oneFuelStation} /> })
+            currFuelStations.map((oneFuelStation, index) => { return <OneFuelStation key={oneFuelStation.id} {...oneFuelStation} index={String(index+1)} /> })
             ) : (
-            console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array)")
+            console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array) - partial")
           )}
         </div>
+
       </div>
     )
   }
