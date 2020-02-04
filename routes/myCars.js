@@ -79,29 +79,34 @@ router.post("/", (req, res) => {
 
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
-  console.log(req.body.car);
-  Car.findByIdAndUpdate(req.params.id, {
-    kennzeichen: req.body.car.kennzeichen,
-    hersteller: req.body.car.hersteller,
-    modell: req.body.car.modell,
-    kraftstoff: req.body.car.kraftstoff,
-    leistung_ps: req.body.car.leistung_ps,
-    erstzulassung_monat: req.body.car.erstzulassung_monat,
-    erstzulassung_jahr: req.body.car.erstzulassung_jahr,
-    kaufpreis: req.body.car.kaufpreis,
-    kilometerstand: req.body.car.kilometerstand,
-    kaufdaten: {
-      kaufdatum: req.body.car.kennzeichen.kaufdatum,
-      kaufpreis: req.body.car.kennzeichen.kaufpreis,
-      laufleistung: req.body.car.kennzeichen.laufleistung
-    }
-  })
+  //console.log("in servers put router");
+  //console.log(req.body.car);
+  let car = req.body.car;
+  let carId = req.params.id;
+
+  Car.findById(carId)
+  .then(returnedCar => {
+    returnedCar.kennzeichen= car.kennzeichen
+    returnedCar.hersteller= car.hersteller
+    returnedCar.modell= car.modell
+    returnedCar.kraftstoff= car.kraftstoff
+    returnedCar.verbrauch= car.verbrauch
+    returnedCar.leistung_ps= car.leistung_ps
+    returnedCar.erstzulassung_monat= car.erstzulassung_monat
+    returnedCar.erstzulassung_jahr= car.erstzulassung_jahr
+    returnedCar.kaufpreis= car.kaufpreis
+    returnedCar.kilometerstand= car.kilometerstand
+    returnedCar.kaufdaten.kaufdatum= car.kaufdaten.kaufdatum
+    returnedCar.kaufdaten.kaufpreis= car.kaufdaten.kaufpreis
+    returnedCar.kaufdaten.laufleistung= car.kaufdaten.laufleistung
+    returnedCar.save()
     .then(car => {
       res.json(car);
     })
-    .catch(err => {
-      res.status(500).json(err);
-    });
+  })
+  .catch(err => {
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;

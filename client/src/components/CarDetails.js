@@ -57,30 +57,37 @@ export default class CarDetails extends Component {
     });
   };
 
-  handleChange = event => {
-    console.log("Change handler", event);
+  handleChange = (event) => {
+    //console.log("Change handler", event);
+    console.log("active? ", this.state.editActive);
+
+    let {name, value} = event.target;
+    console.log(name + " " + value);
 
     if (this.state.editActive) {
+      console.log("edit active");
       let carCopy = this.state.car;
       let kaufdatenCopy = this.state.car.kaufdaten;
 
-      if (carCopy[event.target.name]) {
-        carCopy[event.target.name] = event.target.value;
-        this.setState({
-          car: carCopy
-        });
-      } else if (kaufdatenCopy[event.target.name]) {
-        kaufdatenCopy[event.target.name] = event.target.value;
+      if (kaufdatenCopy.hasOwnProperty(name)) {
+        console.log("in kaufdaten");
+        kaufdatenCopy[name] = value;
         this.setState({
           kaufdaten: kaufdatenCopy
         });
       }
+      else if (carCopy.hasOwnProperty(name)) {
+        console.log("in car");
+        carCopy[name] = value;
+        this.setState({
+          car: carCopy
+        });
+      }
     }
-    console.log("change handler", event.target.name);
   };
 
-  handleSubmit = event => {
-    console.log("hadnle submit", this.state.car);
+  handleSubmit = (event) => {
+    console.log("handle submit", this.state.car);
     event.preventDefault();
     const id = this.props.match.params.id;
     axios
@@ -88,6 +95,7 @@ export default class CarDetails extends Component {
         car: this.state.car
       })
       .then(response => {
+        console.log("carEditResp: ", response);
         this.setState({
           car: response.data,
           editActive: false
@@ -100,25 +108,17 @@ export default class CarDetails extends Component {
   };
 
   render() {
-    const car = this.state.car;
-    //const kaufdaten = this.state.kaufdaten;
-    console.log(`CarDetails -----> rendered for car id`, car._id);
-    console.log("Verbrauch", this.state.car.verbrauch);
-
-    //const { kennzeichen, hersteller, modell, erstzulassung_monat,
-    //erstzulassung_jahr, kraftstoff, verbrauch, leistung_ps, kilometerstand,
-    //kaufdatum, kaufpreis, kilometerstand_bei_kauf } = this.state;
-
-    console.log(this.state.editActive);
+    console.log('CarDetails -----> rendered');
+    console.log("state: ", this.state.car);
 
     return (
       <div>
-        <h2>Fahrzeug Details für {car.kennzeichen}</h2>
+        <h2>Fahrzeug Details für {this.state.car.kennzeichen}</h2>
 
         <Button onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
         <form onSubmit={this.handleSubmit}>
           <div className="car-img-div">
-            <img src={car.bild} className="car-image" alt="Autobild" />
+            <img src={this.state.car.bild} className="car-image" alt="Autobild" />
           </div>
 
           <p className="p-class">
@@ -128,7 +128,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="kennzeichen"
                 id="kennzeichen"
-                value={car.kennzeichen}
+                value={this.state.car.kennzeichen}
                 onChange={this.handleChange}
               />
             </span>
@@ -140,7 +140,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="hersteller"
                 id="hersteller"
-                value={car.hersteller}
+                value={this.state.car.hersteller}
                 onChange={this.handleChange}
               />
             </span>
@@ -152,7 +152,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="modell"
                 id="modell"
-                value={car.modell}
+                value={this.state.car.modell}
                 onChange={this.handleChange}
               />
             </span>
@@ -164,7 +164,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="erstzulassung_monat"
                 id="erstzulassung_monat"
-                value={car.erstzulassung_monat}
+                value={this.state.car.erstzulassung_monat}
                 onChange={this.handleChange}
               />
             </span>
@@ -176,7 +176,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="erstzulassung_jahr"
                 id="erstzulassung_jahr"
-                value={car.erstzulassung_jahr}
+                value={this.state.car.erstzulassung_jahr}
                 onChange={this.handleChange}
               />
             </span>
@@ -188,7 +188,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="kraftstoff"
                 id="kraftstoff"
-                value={car.kraftstoff}
+                value={this.state.car.kraftstoff}
                 onChange={this.handleChange}
               />
             </span>
@@ -200,7 +200,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="verbrauch"
                 id="verbrauch"
-                value={car.verbrauch}
+                value={(this.state.car.verbrauch===undefined) ? "" : this.state.car.verbrauch}
                 onChange={this.handleChange}
               />
             </span>
@@ -212,7 +212,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="leistung_ps"
                 id="leistung_ps"
-                value={car.leistung_ps}
+                value={this.state.car.leistung_ps}
                 onChange={this.handleChange}
               />
             </span>
@@ -224,7 +224,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="kilometerstand"
                 id="kilometerstand"
-                value={car.kilometerstand}
+                value={this.state.car.kilometerstand}
                 onChange={this.handleChange}
               />
             </span>
@@ -236,7 +236,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="kaufdatum"
                 id="kaufdatum"
-                value={car.kaufdaten.kaufdatum}
+                value={this.state.car.kaufdaten.kaufdatum || ""}
                 onChange={this.handleChange}
               />
             </span>
@@ -248,7 +248,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="kaufpreis"
                 id="kaufpreis"
-                value={car.kaufdaten.kaufpreis}
+                value={this.state.car.kaufdaten.kaufpreis}
                 onChange={this.handleChange}
               />
             </span>
@@ -260,7 +260,7 @@ export default class CarDetails extends Component {
                 type="text"
                 name="laufleistung"
                 id="laufleistung"
-                value={car.kaufdaten.laufleistung}
+                value={this.state.car.kaufdaten.laufleistung}
                 onChange={this.handleChange}
               />
             </span>
