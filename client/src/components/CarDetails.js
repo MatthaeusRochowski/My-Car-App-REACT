@@ -86,6 +86,21 @@ export default class CarDetails extends Component {
     }
   };
 
+  deleteCar = () => {
+    const id = this.props.match.params.id;
+    
+    axios
+      .delete(`/api/myCars/${id}`)
+      .then(response => {
+        // redirect to '/projects'
+        console.log(this.props.history);
+        this.props.history.push("/myCars");
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   handleSubmit = (event) => {
     console.log("handle submit", this.state.car);
     event.preventDefault();
@@ -116,6 +131,9 @@ export default class CarDetails extends Component {
         <h2>Fahrzeug Details für {this.state.car.kennzeichen}</h2>
 
         <Button onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
+        <Button variant="danger" onClick={this.deleteCar}>
+              Fahrzeug löschen
+            </Button>
         <form onSubmit={this.handleSubmit}>
           <div className="car-img-div">
             <img src={this.state.car.bild} className="car-image" alt="Autobild" />

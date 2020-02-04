@@ -109,4 +109,20 @@ router.put("/:id", (req, res) => {
   });
 });
 
+// DELETE /api/myCars/:id
+router.delete("/:id", (req, res) => {
+  Car.findByIdAndDelete(req.params.id)
+    .then(car => {
+      // Delete the image on cloudinary
+      // cloudinary.uploader.destroy(car.imagePublicID);
+      // Deletes all the documents in the Task collection where the value for the `_id` field is present in the `project.tasks` array
+      //return Task.deleteMany({ _id: { $in: project.tasks } }).then(() =>
+        res.json({ message: "ok" })
+      //);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;
