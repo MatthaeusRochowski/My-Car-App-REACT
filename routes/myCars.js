@@ -34,11 +34,12 @@ router.get("/:id", (req, res) => {
   }
 
   Car.findById(carId)
-    .populate("eigner_ref")
+  //  .populate("eigner_ref")
     .then(car => {
-      if (!car) {
-        res.status(404).json({ message: "Project not found" });
-      } else res.json(car);
+      res.json(car);
+    //  if (!car) {
+    //    res.status(404).json({ message: "Project not found" });
+     // } else res.json(car);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -48,13 +49,33 @@ router.get("/:id", (req, res) => {
 // POST /api/myCars
 router.post("/", (req, res) => {
   // create 1 car
+  console.log(req);
 
-  const loggedUser = req.session.user;
+  //const loggedUser = req.session.user; 
+  const { verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps,
+  erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
+   bild, eigner_ref} = req.body;
 
-  let bild = "/DefaultPlatzhalter.png";
-  if (req.file) bild = req.file.url;
+   //console.log(loggedUser, "status 500")
+   console.log("inside post route", req.body)
 
-  Car.create({
+  //let bild = "../client/build/DefaultPlatzhalter.png";
+  //if (req.file) bild = req.file.url;
+    Car.create({
+      verbrauch, kennzeichen, hersteller, modell, kraftstoff, leistung_ps, 
+      erstzulassung_monat, erstzulassung_jahr, kaufdaten, kilometerstand,
+      bild, eigner_ref
+    })
+    
+    .then(car => {
+      res.json(car);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+  /*Car.create({
     eigner_ref: loggedUser._id,
     kennzeichen: req.body.kennzeichen,
     hersteller: req.body.hersteller,
@@ -78,6 +99,7 @@ router.post("/", (req, res) => {
     .catch(err => {
       res.status(500).json(err);
     });
-});
+});*/
 
+console.log("Test car add" , Car)
 module.exports = router;
