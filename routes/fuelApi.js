@@ -27,7 +27,7 @@ router.get('/', (req, res, next) => {
             console.log("FuelStations: - (live-mode) tankerkönig response received ");
             fuelStationResponse.data.testMode = testMode;
             //console.log(fuelStationResponse.data);
-            return res.json({ fuelstations: fuelStationResponse.data });
+            return res.json({ ...fuelStationResponse.data });
           })
         }
         else {
