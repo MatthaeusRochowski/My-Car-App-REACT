@@ -51,20 +51,20 @@ router.post("/", (req, res) => {
   console.log("inside post route", req.body);
 
   var car = new Car({
-      kennzeichen: req.body.kennzeichen,
-      hersteller: req.body.hersteller,
-      modell: req.body.modell,
-      kraftstoff: req.body.kraftstoff,
-      verbrauch: req.body.verbrauch,
-      leistung_ps: req.body.leistung_ps,
-      erstzulassung_monat: req.body.erstzulassung_monat,
-      erstzulassung_jahr: req.body.erstzulassung_jahr,
-      kaufpreis: req.body.kaufpreis,
-      kilometerstand: req.body.kilometerstand,
+      kennzeichen: req.body.car.kennzeichen,
+      hersteller: req.body.car.hersteller,
+      modell: req.body.car.modell,
+      kraftstoff: req.body.car.kraftstoff,
+      verbrauch: req.body.car.verbrauch,
+      leistung_ps: req.body.car.leistung_ps,
+      erstzulassung_monat: req.body.car.erstzulassung_monat,
+      erstzulassung_jahr: req.body.car.erstzulassung_jahr,
+      kaufpreis: req.body.car.kaufpreis,
+      kilometerstand: req.body.car.kilometerstand,
       kaufdaten: {
-        kaufdatum: req.body.kaufdaten.kaufdatum,
-        kaufpreis: req.body.kaufdaten.kaufpreis,
-        laufleistung: req.body.kaufdaten.laufleistung
+        kaufdatum: req.body.car.kaufdaten.kaufdatum,
+        kaufpreis: req.body.car.kaufdaten.kaufpreis,
+        laufleistung: req.body.car.kaufdaten.laufleistung
       }
       })
 
