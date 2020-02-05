@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import service from "../services/upload.js";
-//import { response } from "express";
 
 class AddCar extends Component {
   state = {
@@ -24,7 +23,9 @@ class AddCar extends Component {
       kilometerstand: "",
       bild: "",
       publicId: ""
-    }
+    },
+    file: "",
+    error: ""
   };
 
   handleChange = event => {
@@ -49,39 +50,46 @@ class AddCar extends Component {
     }
   };
 
-  handleSubmit = event => {
+  handleFileSelect = event => {
+    this.setState({ file: event.target.files[0] });
+  };
+
+  handleSubmit = async event => {
     console.log("Submit Button pressed");
+
     if (event) {
       event.preventDefault();
     }
 
-    console.log("The file to be uploaded is: ", event.target);
+    console.log("The file to be uploaded is: ", this.state.file);
     const uploadData = new FormData();
-    uploadData.append('bild', this.state.car.bild);
+    uploadData.append("file", this.state.file);
 
-    service
-      .handleUpload(uploadData)
-      .then(response => {
-        const bild = response.secure_url;
-        const publicId = response.public_id;
-        console.log("res from handleupload: ", response.secure_url);
-        this.setState({ bild: bild, publicId: publicId });
-        console.log("new state: ", this.state.bild);
-      })
-      .catch(err => {
-        console.log("Error while uploading the file: ", err);
-      });
+    try {
+      const cloudinaryResponse = await service.handleUpload(uploadData);
+      const bild = cloudinaryResponse.secure_url;
+      const publicId = cloudinaryResponse.public_id;
 
-    axios
-      .post("/api/myCars", {
+      const carCopy = this.state.car;
+
+      carCopy.bild = bild;
+      carCopy.publicId = publicId;
+
+      this.setState({ car: carCopy });
+    } catch (err) {
+      this.setState({ error: err });
+      console.log("Error", this.state.error);
+    }
+
+    try {
+      const response = await axios.post("/api/myCars", {
         car: this.state.car
-      })
-      .then(() => {
-        this.props.history.push("/myCars");
-      })
-      .catch(err => {
-        console.log(err);
       });
+      this.props.history.push("/myCars");
+    } catch (err) {
+      this.setState({ error: err });
+      console.log("Error", this.state.error);
+    }
   };
 
   render() {
@@ -190,8 +198,7 @@ class AddCar extends Component {
               type="file"
               name="bild"
               id="bild"
-              //value={this.state.car.bild}
-              //onChange={this.handleFileSelect}
+              onChange={this.handleFileSelect}
             />
           </Form.Group>
 

@@ -4,9 +4,9 @@ const User = require('../models/User');
 
 const { uploader } = require('../configs/cloudinary');
 
-router.post('/', uploader.single("bild"), (req, res, next) => {
+router.post('/', uploader.single("file"), (req, res, next) => {
   console.log("Inside file upload route")
-  console.log('file is: ', req.body)
+  console.log('file is: ', req.file)
   //console.log('public id: ', req.file.car.public_id);
   if (!req.file) {
     next(new Error('No file uploaded!'));

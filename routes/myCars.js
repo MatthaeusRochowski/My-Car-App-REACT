@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
 //const outerAPIs = new APIHandler();
 
-//const uploadCloud = require("../config/cloudinary.js");
+//const uploader = require("../config/cloudinary.js");
 
 // GET /api/myCars
 router.get("/", (req, res) => {
@@ -70,7 +70,10 @@ router.post("/", (req, res) => {
       publicId: req.body.car.publicId
       })
 
+      console.log("Post myCar", car)
+
     car.save()
+
         .then(car => {
           console.log("Car saved")
           res.json(car);
