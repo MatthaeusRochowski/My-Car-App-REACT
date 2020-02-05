@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export default class FuelStation_One extends Component {
+export default class FuelStationOne extends Component {
   render() {
     console.log("Frontend: FuelStations: FuelStations_One.js  - render invoked");
     //console.log("Frontend: FuelStations: FuelStations_One.js  - fuelstation props:", this.props);

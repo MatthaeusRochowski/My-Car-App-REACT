@@ -3,7 +3,7 @@ import GoogleMapReact from 'google-map-react';
 
 const AnyReactComponent = ({text}: any) => <div>{text}</div>;
 
-export default class FuelStation_Maps extends Component {
+export default class FuelStationMaps extends Component {
   static defaultProps = {
     center: {
       lat: 59.95,
