@@ -45,9 +45,9 @@ export default class MyCars extends Component {
             {this.state.cars.map(car => {
               return (
                 <div key={car._id}>
-                  <Link to={`/myCars/${car._id}`}>
+                 
                     <Car car={car} />
-                  </Link>
+                
                 </div>
               );
             })}
