@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Form, Button } from "react-bootstrap";
 
 export default class Car extends Component {
   render() {
@@ -18,6 +19,9 @@ export default class Car extends Component {
     <p className="p-class"><span>Erstzulassung:</span><span>{this.props.car.erstzulassung_monat} / {this.props.car.erstzulassung_jahr}</span></p>
     
     <p className="p-class"><span>Kilometerstand:</span><span>{this.props.car.kilometerstand} km</span></p>
+
+    <Button>Fahrt eintragen</Button>
+    <Button>Rechnung erfassen</Button>
 
 </div>
     )

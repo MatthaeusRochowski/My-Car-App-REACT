@@ -90,4 +90,7 @@ app.use("/api/myCars", myCarRoutes);
 const fuelApiRoutes = require("./routes/fuelApi");
 app.use("/api/getFuelStations", fuelApiRoutes);
 
+const uploadRoutes = require('./routes/file-upload');
+app.use('/api/upload', uploadRoutes);
+
 module.exports = app;
