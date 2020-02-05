@@ -3,11 +3,12 @@ import axios from "axios";
 import FuelStationMap from './FuelStationMap';
 
 export default class FuelStations extends Component {
+  //test mode is controlled by servers routes/fuelApi.js
   state = {
     zip: "",
     fuelstations: [],
     sortOrder: "distance",
-    testMode: true   
+    testMode: true
   }
 
   handleInputChanges = (event) => {
@@ -24,6 +25,8 @@ export default class FuelStations extends Component {
     .then(response => {
       console.log("Frontend: FuelStations: FuelStations.js - response received: ");
       //console.log(response.data);
+      //console.log(response.data.stations);
+      //console.log(response.data.testMode);
       this.setState({ 
         fuelstations: response.data.stations,
         testMode: response.data.testMode
@@ -33,9 +36,9 @@ export default class FuelStations extends Component {
 
   render() {
     console.log("Frontend: FuelStations: FuelStations.js - render invoked");
-    //console.log("Frontend: FuelStations: FuelStations.js - testMode: ", this.state.testMode);
-    //console.log("Frontend: FuelStations: FuelStations.js - fuelstation state:", this.state.fuelstations);
-    //console.log("Frontend: FuelStations: FuelStations.js - sortOrder state:", this.state.sortOrder);
+    console.log("Frontend: FuelStations: FuelStations.js - testMode: ", this.state.testMode);
+    console.log("Frontend: FuelStations: FuelStations.js - fuelstation state:", this.state.fuelstations);
+    console.log("Frontend: FuelStations: FuelStations.js - sortOrder state:", this.state.sortOrder);
     let currFuelStations = this.state.fuelstations
     currFuelStations.map((oneFuelStation, index) => {
       if (index === 0) {
@@ -107,7 +110,7 @@ export default class FuelStations extends Component {
           return {index: index, ...oneFuelStation, color: 'blue'}
         }
       });
-      //console.log("sorted markers: ", googleMapsMarker);
+      console.log("sorted markers: ", googleMapsMarker);
 
       googleMapsMarkerCenterInterim = googleMapsMarker.reduce(function (acc, cur) {
         let res = {minLat: cur.lat, maxLat: cur.lat, minLng: cur.lng, maxLng: cur.lng}
