@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
+import service from "../services/upload.js";
+//import { response } from "express";
 
 class AddCar extends Component {
   state = {
@@ -20,37 +22,55 @@ class AddCar extends Component {
         laufleistung: ""
       },
       kilometerstand: "",
-      bild: ""
+      bild: "",
+      publicId: ""
     }
   };
 
-  handleChange = (event) => {
-
-    let {name, value} = event.target;
+  handleChange = event => {
+    let { name, value } = event.target;
     //console.log(name + " " + value);
 
-      let carCopy = this.state.car;
-      let kaufdatenCopy = this.state.car.kaufdaten;
+    let carCopy = this.state.car;
+    let kaufdatenCopy = this.state.car.kaufdaten;
 
-      if (kaufdatenCopy.hasOwnProperty(name)) {
-        console.log("in kaufdaten");
-        kaufdatenCopy[name] = value;
-        this.setState({
-          kaufdaten: kaufdatenCopy
-        });
-      }
-      else if (carCopy.hasOwnProperty(name)) {
-        console.log("in car");
-        carCopy[name] = value;
-        this.setState({
-          car: carCopy
-        });
-      }
+    if (kaufdatenCopy.hasOwnProperty(name)) {
+      console.log("in kaufdaten");
+      kaufdatenCopy[name] = value;
+      this.setState({
+        kaufdaten: kaufdatenCopy
+      });
+    } else if (carCopy.hasOwnProperty(name)) {
+      console.log("in car");
+      carCopy[name] = value;
+      this.setState({
+        car: carCopy
+      });
+    }
   };
 
   handleSubmit = event => {
-    event.preventDefault();
-    console.log("SUBMIT");
+    console.log("Submit Button pressed");
+    if (event) {
+      event.preventDefault();
+    }
+
+    console.log("The file to be uploaded is: ", event.target);
+    const uploadData = new FormData();
+    uploadData.append('bild', this.state.car.bild);
+
+    service
+      .handleUpload(uploadData)
+      .then(response => {
+        const bild = response.secure_url;
+        const publicId = response.public_id;
+        console.log("res from handleupload: ", response.secure_url);
+        this.setState({ bild: bild, publicId: publicId });
+        console.log("new state: ", this.state.bild);
+      })
+      .catch(err => {
+        console.log("Error while uploading the file: ", err);
+      });
 
     axios
       .post("/api/myCars", {
@@ -67,6 +87,7 @@ class AddCar extends Component {
   render() {
     console.log("AddCar -----> rendered");
     console.log("AddCar props: ", this.props.user);
+    console.log("State: ", this.state);
 
     return (
       <div>
@@ -169,8 +190,8 @@ class AddCar extends Component {
               type="file"
               name="bild"
               id="bild"
-              value={this.state.car.bild}
-              onChange={this.handleChange}
+              //value={this.state.car.bild}
+              //onChange={this.handleFileSelect}
             />
           </Form.Group>
 

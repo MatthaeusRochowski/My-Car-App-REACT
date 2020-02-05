@@ -65,7 +65,9 @@ router.post("/", (req, res) => {
         kaufdatum: req.body.car.kaufdaten.kaufdatum,
         kaufpreis: req.body.car.kaufdaten.kaufpreis,
         laufleistung: req.body.car.kaufdaten.laufleistung
-      }
+      },
+      bild: req.body.car.bild,
+      publicId: req.body.car.publicId
       })
 
     car.save()
