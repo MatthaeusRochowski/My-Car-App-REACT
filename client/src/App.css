@@ -258,19 +258,3 @@ h2 {
   background-color: #708090;
   color: whitesmoke;
 }
-
-.car-details {
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.car-details-form {
-  display: flex,
-  
-}
-
-.car-details-logbook {
-  margin-top: 35px
-}
-
-
