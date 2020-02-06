@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import MyCars from "./components/MyCars";
 import AddCar from "./components/AddCar";
 import CarDetails from "./components/CarDetails";
+import AddLog from "./components/AddLog";
 
 import FuelStations from "./components/FuelStations";
 
@@ -53,7 +54,9 @@ class App extends React.Component {
           <Route exact path="/myCars/:id" render={
             props => <CarDetails user={this.state.user} {...props} />
           }/>
-          
+          <Route exact path="/myCars/:id/addLog" render={
+            props => <AddLog {...props} />
+          }/>
           <Route exact path="/fuelstations" component={FuelStations} />
         </Switch>
       </div>
