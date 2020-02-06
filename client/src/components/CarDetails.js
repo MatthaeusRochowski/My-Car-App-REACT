@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import Logbook from "./Logbook";
+import Card from 'react-bootstrap/Card';
+import Nav from 'react-bootstrap/Nav';
+import { MDBInput } from 'mdbreact';
+
 
 export default class CarDetails extends Component {
   state = {
@@ -144,7 +148,6 @@ export default class CarDetails extends Component {
                     alt="Autobild"
                   />
                 </div>
-
                 <p className="p-class">
                   <span>Kennzeichen:</span>
                   <span>
@@ -300,6 +303,21 @@ export default class CarDetails extends Component {
           </div>
 
           <div className="car-details-logbook">
+            <Card>
+              <Card.Header>
+                <Nav variant="tabs" defaultActiveKey='#logbuch'>
+                  <Nav.Item>
+                    <Nav.Link href='#logbuch'>Logbuch</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link href='#rechnungen'>Rechnungen</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link href='#kosten'>Kostenauswertung</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Header>
+            </Card>
             <Logbook />
           </div>
         </div>
