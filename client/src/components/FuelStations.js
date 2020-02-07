@@ -1,19 +1,65 @@
 import React, { Component } from 'react';
+import Sidebar from "react-sidebar";
 import axios from "axios";
+import { Button } from "react-bootstrap";
+import FuelStationsBarEntry from './FuelStationsBarEntry';
 import FuelStationMap from './FuelStationMap';
 
+const mql = window.matchMedia(`(min-width: 1200px)`);
+
 export default class FuelStations extends Component {
-  //test mode is controlled by servers routes/fuelApi.js with the intend to limit the api calls to tankerkönig 
-  state = {
-    zip: "",
-    fuelstations: [],
-    sortOrder: "distance",
-    testMode: true
+  constructor(props) {
+    super(props);
+    this.state = {
+      mql: window.matchMedia(`(min-width: 1200px)`),
+      sidebarDocked: mql.matches,
+      sidebarOpen: false,
+      zip: "",
+      fuelstations: [],
+      sortOrder: "distance",
+      testMode: true,         //test mode is controlled by servers routes/fuelApi.js with the intend to limit the api calls to tankerkönig 
+      selectedKey: "",
+    };
+    this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
+    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+  }
+ 
+  componentWillMount() {
+    mql.addListener(this.mediaQueryChanged);
+  }
+ 
+  componentWillUnmount() {
+    this.state.mql.removeListener(this.mediaQueryChanged);
+  }
+ 
+  onSetSidebarOpen(open) {
+    this.setState({ sidebarOpen: open });
+  }
+ 
+  mediaQueryChanged() {
+    this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
+  }
+
+  handleSidebarEntryClick = (id) => {
+    //console.log("Sidebar-Entry clicked: ", id);
+    {/*toggle*/}
+    if ((this.state.selectedKey === "") || ((this.state.selectedKey !== id))) {
+      this.setState({ selectedKey: id }); 
+    }
+    else this.setState({ selectedKey: "" }); 
   }
 
   handleInputChanges = (event) => {
     let { name, value } = event.target;
     this.setState({ [name]: value });   
+  }
+
+  handleInputChangesSort = (event) => {
+    let value = event.target.value;
+    this.setState({
+      sortOrder: value,
+      selectedKey: "",
+    });   
   }
 
   handleFormSubmit = (event) => {
@@ -34,12 +80,10 @@ export default class FuelStations extends Component {
     })
   }
 
-  calculateMapCenter = () => {
+  calculateMapCenter = (currFuelStations) => {
     let googleMapsCenter = {lat: 48.731, lng: 11.187};
-    let currFuelStations = this.state.fuelstations;
-
     if (currFuelStations.length > 0) {
-      let googleMapsCenter = currFuelStations.reduce(function (acc, cur) {
+      googleMapsCenter = currFuelStations.reduce(function (acc, cur) {
         let res = {minLat: cur.lat, maxLat: cur.lat, minLng: cur.lng, maxLng: cur.lng}
         acc.minLat > cur.lat ? res.minLat = cur.lat : res.minLat = acc.minLat
         acc.minLng > cur.lng ? res.minLng = cur.lng : res.minLng = acc.minLng
@@ -56,15 +100,12 @@ export default class FuelStations extends Component {
     return googleMapsCenter;
   }
 
-  prepareFuelStations = () => {
-    //console.log("Frontend: FuelStations: FuelStations.js - testMode:", this.state.testMode ? 'ON' : 'OFF');
-    //console.log("Frontend: FuelStations: FuelStations.js - fuelstation state:", this.state.fuelstations);
-    //console.log("Frontend: FuelStations: FuelStations.js - sortOrder state:", this.state.sortOrder);
-    let googleMapsMarker = {lat: 48.731, lng: 11.187};
-    let currFuelStations = this.state.fuelstations;
-
+  prepareFuelStations = (currFuelStations, sortOrder) => {
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - testMode:", this.props.testMode ? 'ON' : 'OFF');
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - fuelstation props:", this.props.fuelstations);
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - sortOrder props:", this.props.sortOrder);
+    let googleMapsMarker = [{lat: 48.731, lng: 11.187, index: 0}];
     if (currFuelStations.length > 0) {
-      let sortOrder = this.state.sortOrder;
       googleMapsMarker = currFuelStations.sort(function(stationA, stationB) {
         switch(sortOrder) {
           case "distance":
@@ -113,36 +154,49 @@ export default class FuelStations extends Component {
     }
     return googleMapsMarker;
   }
-
+ 
   render() {
-    console.log("Frontend: FuelStations: FuelStations.js - render invoked");
     let currFuelStations = this.state.fuelstations;
-    let googleMapsCenter = this.calculateMapCenter();
-    let googleMapsMarker = this.prepareFuelStations();
-
-    let mapsForm = (
-      <div>
-        <form onSubmit={this.handleFormSubmit}>
-          <label htmlFor="zip">Postleitzahl: </label>
-          <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputChanges} placeholder="z.B. 85083" />
-          <label htmlFor="sortOrder">Sortierung nach: </label>
-          <button type="submit">Request</button>
-        </form>
-        <select name="sortOrder" onChange={this.handleInputChanges}>
-          <option value="distance">Entfernung</option>
-          <option value="e5price">E5-Preis</option>
-          <option value="e10price">E10-Preis</option>
-          <option value="dieselprice">Diesel-Preis</option>
-        </select>
+    let sortOrder = this.state.sortOrder;
+    let googleMapsCenter = this.calculateMapCenter(currFuelStations);
+    let googleMapsMarker = this.prepareFuelStations(currFuelStations, sortOrder);
+    let sidebar = (
+      <div style={{textAlign: 'left'}}>
+        <div style={{position: 'sticky', top: '0px', backgroundColor: 'white'}}>
+          <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
+            <label htmlFor="zip">Postleitzahl:</label>
+            <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px'}} placeholder="z.B. 85083" />
+            <Button type="submit" style={{margin: '-3px 5px 0px 1px'}} size='sm'>OK</Button>
+          </form>
+          <label htmlFor="sortOrder" style={{marginLeft: '5px'}}>Sortierung:</label>
+          <select name="sortOrder" onChange={this.handleInputChangesSort} style={{width: '13.5ch', marginLeft: "15px", borderRadius: '3px'}}>
+            <option value="distance">Entfernung</option>
+            <option value="e5price">E5-Preis</option>
+            <option value="e10price">E10-Preis</option>
+            <option value="dieselprice">Diesel-Preis</option>
+          </select>
+          <hr style={{marginTop: '0px'}}/>
+        </div>
+        {googleMapsMarker.map(oneStation => {
+          if (oneStation.brand !== undefined) {
+            return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
+          }
+        })}
       </div>
-    ) 
+    );
 
     return (
-      <div>
-        <h1>Tankstellen im Umkreis</h1>
-        {mapsForm}
-        {currFuelStations.length > 0 ? <FuelStationMap center={googleMapsCenter} markers={googleMapsMarker} /> : console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array) - maps")}
+      <div id="sidebar">
+        <Sidebar
+          children={googleMapsMarker.length > 0 ? <FuelStationMap key={googleMapsMarker.id} selectedKey={this.state.selectedKey} center={googleMapsCenter} markers={googleMapsMarker} /> : console.log("Frontend: FuelStations: FuelStationsBody.js - empty fuelstations state (array) - maps")}
+          styles={{root:{top: 40}}}
+          sidebar={sidebar}
+          open={this.state.sidebarOpen}
+          docked={this.state.sidebarDocked}
+          onSetOpen={this.onSetSidebarOpen}
+        >
+        </Sidebar>
       </div>
-    )
+    );
   }
 }
