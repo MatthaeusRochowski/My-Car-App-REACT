@@ -9,7 +9,6 @@ const heute =
 class AddLog extends Component {
   state = {
     car_kennzeichen: "",
-    car_ref: this.props.match.params.id,
     datum: heute,
     strecke_km: "",
     startort: "",
@@ -48,19 +47,18 @@ class AddLog extends Component {
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
+      //strecke_km: this.state.kilometerstand_ende - this.state.kilometerstand_start
     });
   };
 
   handleSubmit = event => {
     console.log("AddLog -----> Submitted");
     console.log("AddLog -----> State: ", this.state);
+    const id = this.props.match.params.id
     event.preventDefault();
-/*     const strecke =
-      this.state.kilometerstand_ende - this.state.kilometerstand_start; */
 
     axios
-      .post(`/api/logbook`, {
-        car_ref: this.state.car_ref,
+      .put(`/api/myCars/logbook/${id}`, {
         datum: this.state.datum,
         strecke_km: this.state.strecke_km,
         startort: this.state.startort,
@@ -75,9 +73,9 @@ class AddLog extends Component {
       .catch(err => {
         this.setState({
           error: err.response.data.message
+        });
+        console.log(this.state.error);
       });
-      console.log(this.state.error);
-    })
   };
 
   render() {

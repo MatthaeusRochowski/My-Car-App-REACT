@@ -31,7 +31,7 @@ router.get("/:id", (req, res) => {
     return;
   }
 
-  Car.findById(carId)
+  Car.findById(carId).populate()
     //  .populate("eigner_ref")
     .then(car => {
       res.json(car);
@@ -107,6 +107,26 @@ router.put("/:id", (req, res) => {
       returnedCar.kaufdaten.laufleistung = car.kaufdaten.laufleistung;
       returnedCar.save().then(car => {
         res.json(car);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/logbook/:id
+
+router.put("/logbook/:id", (req, res) => {
+  console.log("Create logbook entry");
+  console.log("Request: ", req.body);
+  let logbook = req.body;
+  let carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      returnedCar.logbuch = logbook
+      returnedCar.save().then(logbook => {
+        res.json(logbook);
       });
     })
     .catch(err => {
