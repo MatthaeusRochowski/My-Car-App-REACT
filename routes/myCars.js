@@ -118,11 +118,12 @@ router.put("/:id", (req, res) => {
 router.post("/logbook/:id", (req, res) => {
   console.log("Create logbook entry");
   console.log("Request: ", req.body);
-  let logbookEntry = req.body;
-  let carId = req.params.id;
+  const logbookEntry = req.body;
+  const carId = req.params.id;
 
   Car.findById(carId)
     .then(returnedCar => {
+      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand) returnedCar.kilometerstand = logbookEntry.kilometerstand_ende
       returnedCar.logbuch.unshift(logbookEntry)
       returnedCar.save().then(logbook => {
         res.json(logbook);

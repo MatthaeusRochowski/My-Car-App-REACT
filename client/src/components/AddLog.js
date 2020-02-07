@@ -25,7 +25,7 @@ class AddLog extends Component {
     axios
       .get(`/api/myCars/${id}`)
       .then(response => {
-        console.log("Axios Call ----> Get Data executed", response.data);
+        //console.log("Axios Call ----> Get Data executed", response.data);
         this.setState({
           kilometerstand_start: response.data.kilometerstand,
           car_kennzeichen: response.data.kennzeichen
@@ -47,13 +47,12 @@ class AddLog extends Component {
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
-      //strecke_km: this.state.kilometerstand_ende - this.state.kilometerstand_start
     });
   };
 
   handleSubmit = event => {
-    console.log("AddLog -----> Submitted");
-    console.log("AddLog -----> State: ", this.state);
+    //console.log("AddLog -----> Submitted");
+    //console.log("AddLog -----> State: ", this.state);
     const id = this.props.match.params.id
     event.preventDefault();
 
@@ -67,7 +66,7 @@ class AddLog extends Component {
         kilometerstand_ende: this.state.kilometerstand_ende
       })
       .then(response => {
-        console.log("AddLog -----> New log created --> Response:", response);
+        //console.log("AddLog -----> New log created --> Response:", response);
         this.props.history.push("/myCars");
       })
       .catch(err => {
@@ -79,9 +78,11 @@ class AddLog extends Component {
   };
 
   render() {
-    console.log("AddLog -----> rendered");
-    console.log("AddLog Props: ", this.props);
-    console.log("AddLog State: ", this.state);
+    //console.log("AddLog -----> rendered");
+    //console.log("AddLog Props: ", this.props);
+    //console.log("AddLog State: ", this.state);
+
+    const strecke = this.state.kilometerstand_ende - this.state.kilometerstand_start;
 
     return (
       <div>
@@ -130,8 +131,7 @@ class AddLog extends Component {
               type="text"
               name="strecke_km"
               id="strecke_km"
-              value={this.state.strecke_km}
-              onChange={this.handleChange}
+              value={ strecke }
             />
           </Form.Group>
 
