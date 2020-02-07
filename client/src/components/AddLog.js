@@ -58,7 +58,7 @@ class AddLog extends Component {
     event.preventDefault();
 
     axios
-      .put(`/api/myCars/logbook/${id}`, {
+      .post(`/api/myCars/logbook/${id}`, {
         datum: this.state.datum,
         strecke_km: this.state.strecke_km,
         startort: this.state.startort,

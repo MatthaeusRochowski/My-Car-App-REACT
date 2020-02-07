@@ -115,16 +115,15 @@ router.put("/:id", (req, res) => {
 });
 
 // PUT /api/myCars/logbook/:id
-
-router.put("/logbook/:id", (req, res) => {
+router.post("/logbook/:id", (req, res) => {
   console.log("Create logbook entry");
   console.log("Request: ", req.body);
-  let logbook = req.body;
+  let logbookEntry = req.body;
   let carId = req.params.id;
 
   Car.findById(carId)
     .then(returnedCar => {
-      returnedCar.logbuch = logbook
+      returnedCar.logbuch.unshift(logbookEntry)
       returnedCar.save().then(logbook => {
         res.json(logbook);
       });
