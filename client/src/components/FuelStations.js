@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Sidebar from "react-sidebar";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, DropdownButton, Dropdown } from "react-bootstrap";
 import FuelStationsBarEntry from './FuelStationsBarEntry';
 import FuelStationMap from './FuelStationMap';
 
@@ -54,8 +54,15 @@ export default class FuelStations extends Component {
     this.setState({ [name]: value });   
   }
 
-  handleInputChangesSort = (event) => {
-    let value = event.target.value;
+  //handleInputChangesSort = (event) => {
+  //  let value = event.target.value;
+  //  this.setState({
+  //    sortOrder: value,
+  //    selectedKey: "",
+  //  });   
+  //}
+
+  handleInputChangesSort = (value) => {
     this.setState({
       sortOrder: value,
       selectedKey: "",
@@ -164,23 +171,31 @@ export default class FuelStations extends Component {
       <div style={{textAlign: 'left'}}>
         <div style={{position: 'sticky', top: '0px', backgroundColor: 'white'}}>
           <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
-            <label htmlFor="zip">Postleitzahl:</label>
+            <label htmlFor="zip" style={{color: '#007bff'}}>Plz:</label>
             <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px'}} placeholder="z.B. 85083" />
-            <Button type="submit" style={{margin: '-3px 5px 0px 1px'}} size='sm'>OK</Button>
+            <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px'}} size='sm' variant="outline-primary">OK</Button>
           </form>
-          <label htmlFor="sortOrder" style={{marginLeft: '5px'}}>Sortierung:</label>
-          <select name="sortOrder" onChange={this.handleInputChangesSort} style={{width: '13.5ch', marginLeft: "15px", borderRadius: '3px'}}>
+          <DropdownButton id="dropdown-basic-button" title={`Sortierung: ${this.state.sortOrder}`} variant="outline-primary">
+            <Dropdown.Item onSelect={() => this.handleInputChangesSort("distance")}   >Entfernung</Dropdown.Item>
+            <Dropdown.Item onSelect={() => this.handleInputChangesSort("e5price")}    >E5-Preis</Dropdown.Item>
+            <Dropdown.Item onSelect={() => this.handleInputChangesSort("e10price")}   >E10-Preis</Dropdown.Item>
+            <Dropdown.Item onSelect={() => this.handleInputChangesSort("dieselprice")}>Diesel-Preis</Dropdown.Item>
+          </DropdownButton>
+
+          {/*<label htmlFor="sortOrder" style={{marginLeft: '5px'}}>Sortierung:</label>
+          <select name="sortOrder" onChange={this.handleInputChangesSort} style={{width: '13.5ch', marginLeft: "15px", borderColor: '#007bff', borderRadius: '3px'}}>
             <option value="distance">Entfernung</option>
             <option value="e5price">E5-Preis</option>
             <option value="e10price">E10-Preis</option>
             <option value="dieselprice">Diesel-Preis</option>
-          </select>
+          </select>*/}
           <hr style={{marginTop: '0px'}}/>
         </div>
         {googleMapsMarker.map(oneStation => {
           if (oneStation.brand !== undefined) {
             return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
           }
+          return null;
         })}
       </div>
     );
