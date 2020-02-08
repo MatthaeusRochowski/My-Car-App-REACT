@@ -10,7 +10,6 @@ class AddLog extends Component {
   state = {
     car_kennzeichen: "",
     datum: heute,
-    strecke_km: "",
     startort: "",
     zielort: "",
     kilometerstand_start: "",
@@ -46,7 +45,7 @@ class AddLog extends Component {
 
   handleChange = event => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -54,12 +53,13 @@ class AddLog extends Component {
     //console.log("AddLog -----> Submitted");
     //console.log("AddLog -----> State: ", this.state);
     const id = this.props.match.params.id
+    const strecke = this.state.kilometerstand_ende - this.state.kilometerstand_start;
     event.preventDefault();
 
     axios
       .post(`/api/myCars/logbook/${id}`, {
         datum: this.state.datum,
-        strecke_km: this.state.strecke_km,
+        strecke_km: strecke,
         startort: this.state.startort,
         zielort: this.state.zielort,
         kilometerstand_start: this.state.kilometerstand_start,
@@ -80,9 +80,9 @@ class AddLog extends Component {
   render() {
     //console.log("AddLog -----> rendered");
     //console.log("AddLog Props: ", this.props);
-    //console.log("AddLog State: ", this.state);
+    console.log("AddLog State: ", this.state);
 
-    const strecke = this.state.kilometerstand_ende - this.state.kilometerstand_start;
+    
 
     return (
       <div>
@@ -125,13 +125,6 @@ class AddLog extends Component {
               name="kilometerstand_ende"
               id="kilometerstand_ende"
               onChange={this.handleChange}
-            />
-            <Form.Label htmlFor="strecke_km">Strecke: </Form.Label>
-            <Form.Control
-              type="text"
-              name="strecke_km"
-              id="strecke_km"
-              value={ strecke }
             />
           </Form.Group>
 
