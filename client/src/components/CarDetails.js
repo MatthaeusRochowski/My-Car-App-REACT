@@ -271,7 +271,8 @@ export default class CarDetails extends Component {
                   </span>
                 </p>
 
-                <Button type="submit">Speichern</Button>
+                {this.state.editActive &&
+                <Button type="submit">Speichern</Button>}
               </form>
             </div>
           </div>

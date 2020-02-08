@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CarDetails from "./CarDetails";
+import Logbook from "./Logbook";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 
@@ -30,6 +31,7 @@ export default class CarView extends Component {
               Fahrzeug löschen
             </Button>
         <CarDetails carId = {this.props.match.params.id} />
+        <Logbook carId = {this.props.match.params.id} />
       </div>
     )
   }

@@ -8,15 +8,12 @@ export default class Logbook extends Component {
   }
 
   getData = () => {
-    console.log("Logbook ----> getData executed")
-    const id = this.props.carId;
-
     axios
-      .get(`/api/myCars/${id}`)
+      .get(`/api/myCars/${this.props.carId}`)
       .then(response => {
-        console.log("Logbook - Axios Call ----> Get Data executed", response);
+        console.log("Logbook -----> Axios Call ----> Get Data", response);
         this.setState({
-          logbook: response.data.logbook
+          logbook: response.data.logbuch
         });
       })
       .catch(err => {
@@ -28,15 +25,17 @@ export default class Logbook extends Component {
       });
   };
 
+  componentDidMount() {
+    this.getData();
+  }
+
   render() {
     console.log("Logbook -----> rendered")
-    console.log("Logbook ---> props", this.props)
-
 
     return (
       <div>
         <h4>Fahrtenbuch</h4>
-{/*         <Table striped bordered hover variant="dark">
+        <Table striped bordered hover variant="dark">
           <thead>
             <th>Datum</th>
             <th>Startort</th>
@@ -48,7 +47,7 @@ export default class Logbook extends Component {
             <th>Eintrag löschen</th>
           </thead>
           <tbody>
-           {this.state.logbooklogbook.map(log => {
+           {this.state.logbook.map(log => {
               return (
                 <tr key={log._id}>
                   <td>{log.datum}</td>
@@ -63,7 +62,7 @@ export default class Logbook extends Component {
               );
             })}
           </tbody>
-        </Table> */}
+        </Table>
       </div>
     );
   }
