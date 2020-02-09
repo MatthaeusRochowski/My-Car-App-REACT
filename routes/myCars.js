@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Car = require("../models/Car");
+//const Logbuch = require("../models/Car/Logbuch");
 const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
 //const outerAPIs = new APIHandler();
@@ -145,6 +146,29 @@ router.delete("/:id", (req, res) => {
       //return Task.deleteMany({ _id: { $in: project.tasks } }).then(() =>
       res.json({ message: "ok" });
       //);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// DELETE /api/myCars/logbook/:id
+router.delete("/logbook/delete", (req, res) => {
+  //console.log("Inside Delete Logook Route -----> request query: ", req.query),
+  const carId = req.query.carId;
+  const logId = req.query.logId;
+
+  console.log("Log to be deleted: ", logId);
+
+  Car.findById({ _id: mongoose.Types.ObjectId(carId) })
+    .then(foundCar => {
+      for (let index in foundCar.logbuch) {
+        if (foundCar.logbuch[index]._id.toString() === logId.toString()) {
+          foundCar.logbuch.splice(index, 1);
+          foundCar.save();
+          res.json({ foundCar });
+        }
+      }
     })
     .catch(err => {
       res.status(500).json(err);

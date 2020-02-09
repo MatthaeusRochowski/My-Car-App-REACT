@@ -34,8 +34,12 @@ export default class Logbook extends Component {
 
     axios
       .delete(`/api/myCars/logbook/delete?carId=${this.props.carId}&logId=${key}`)
-      .then(console.log("Log Entry deleted")
-        )
+      .then( response => {
+        console.log("Logbook Deleted -----> Axios Call ----> Get Data", response);
+        this.setState({
+          logbook: response.data.foundCar.logbuch
+        });
+      })
       .catch(err => {
         console.log(err);
       });
