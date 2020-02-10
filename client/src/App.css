@@ -157,52 +157,6 @@ h2 {
   margin-left: 10px;
 }
 
-#kennzeichen {
-  width: 120px;
-}
-
-#hersteller {
-  width: 120px;
-  margin-right: 10px;
-}
-
-#modell {
-  width: 150px;
-  margin-right: 10px;
-}
-#hsn {
-  width: 70px;
-  margin-right: 10px;
-}
-
-#tsn{
-  width: 70px;
-}
-
-#kraftstoff {
-  width: 150px;
-  margin-right: 10px;
-}
-
-#leistung_ps {
-  width: 70px;
-}
-
-#monat {
-  width: 120px;
-  margin-right: 10px;
-}
-
-#jahr {
-  width: 70px;
-  margin-right: 10px;
-}
-
-#kaufpreis {
-  width: 120px;
-  margin-right: 10px;
-}
-
 .group0 {
   display: flex;
   margin-left: 10px;
@@ -258,3 +212,41 @@ h2 {
   background-color: #708090;
   color: whitesmoke;
 }
+
+.tableRowName {
+  text-align: left;
+  
+}
+
+.tableRowValue {
+  border: none;
+  outline-style: none;
+  text-align: right;
+  
+}
+
+.tableOutline {
+  margin-top: 20px;
+  width: 400px;
+  border: 2px solid;
+  border-radius: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.carImage {
+  width: 380px;
+  height: auto;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.overview {
+  display: flex;
+  justify-content: space-around;
+}
+
+.car-details-logbook {
+  margin-top: 20px;
+}
+

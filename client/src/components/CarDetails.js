@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 
 export default class CarDetails extends Component {
   state = {
@@ -111,169 +111,149 @@ export default class CarDetails extends Component {
         <div className="car-details">
           <div className="car-details-form">
             <Button onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
-            
-            <div>
-              <form onSubmit={this.handleSubmit}>
-                <div className="car-img-div">
+
+            <div className="overview">
+              <div>
+                <form className="tableOutline" onSubmit={this.handleSubmit}>
                   <img
                     src={this.state.bild}
-                    className="car-image"
+                    className="carImage"
                     alt="Autobild"
                   />
-                </div>
-
-                <p className="p-class">
-                  <span>Kennzeichen:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kennzeichen"
-                      id="kennzeichen"
-                      value={this.state.kennzeichen}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Hersteller:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="hersteller"
-                      id="hersteller"
-                      value={this.state.hersteller}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Modell:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="modell"
-                      id="modell"
-                      value={this.state.modell}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Erstzulassung Monat:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="erstzulassung_monat"
-                      id="erstzulassung_monat"
-                      value={this.state.erstzulassung_monat}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Erstzulassung Jahr:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="erstzulassung_jahr"
-                      id="erstzulassung_jahr"
-                      value={this.state.erstzulassung_jahr}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Kraftstoff:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kraftstoff"
-                      id="kraftstoff"
-                      value={this.state.kraftstoff}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Verbrauch:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="verbrauch"
-                      id="verbrauch"
-                      value={
-                        this.state.verbrauch === undefined
-                          ? ""
-                          : this.state.verbrauch
-                      }
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Leistung:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="leistung_ps"
-                      id="leistung_ps"
-                      value={this.state.leistung_ps}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Kilometerstand:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kilometerstand"
-                      id="kilometerstand"
-                      value={this.state.kilometerstand}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Kaufdatum:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kaufdatum"
-                      id="kaufdatum"
-                      value={this.state.kaufdatum || ""}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Kaufpreis:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kaufpreis"
-                      id="kaufpreis"
-                      value={this.state.kaufpreis}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-                <p className="p-class">
-                  <span>Kilometerstand bei Kauf:</span>
-                  <span>
-                    <input
-                      type="text"
-                      name="kilometerstand_bei_kauf"
-                      id="kilometerstand_bei_kauf"
-                      value={this.state.kilometerstand_bei_kauf}
-                      onChange={this.handleChange}
-                    />
-                  </span>
-                </p>
-
-                {this.state.editActive &&
-                <Button type="submit">Speichern</Button>}
-              </form>
+                  <Table responsive="sm">
+                    <tbody>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kennzeichen:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kennzeichen"
+                          value={this.state.kennzeichen}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Hersteller:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="hersteller"
+                          value={this.state.hersteller}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Modell:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="modell"
+                          value={this.state.modell}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Erstzulassung Monat:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="erstzulassung_monat"
+                          value={this.state.erstzulassung_monat}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Erstzulassung Jahr:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="erstzulassung_jahr"
+                          value={this.state.erstzulassung_jahr}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kraftstoff:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kraftstoff"
+                          value={this.state.kraftstoff}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Verbrauch:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="verbrauch"
+                          value={
+                            this.state.verbrauch === undefined
+                              ? ""
+                              : this.state.verbrauch
+                          }
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Leistung:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="leistung_ps"
+                          value={this.state.leistung_ps}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kilometerstand:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kilometerstand"
+                          value={this.state.kilometerstand}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kaufdatum:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kaufdatum"
+                          value={this.state.kaufdatum || ""}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kaufpreis:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kaufpreis"
+                          value={this.state.kaufpreis}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                      <tr className="tableBox">
+                        <td className="tableRowName">Kilometerstand bei Kauf:</td>
+                        <td><input
+                          className="tableRowValue"
+                          type="text"
+                          name="kilometerstand_bei_kauf"
+                          value={this.state.kilometerstand_bei_kauf}
+                          onChange={this.handleChange}
+                        /></td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                  {this.state.editActive &&
+                    <Button type="submit">Änderungen übernehmen</Button>}
+                  {this.state.editActive &&
+                    <Button type="reset" class="btn btn-default pull-right">Abbrechen</Button>}
+                </form>
+              </div>
             </div>
           </div>
         </div>

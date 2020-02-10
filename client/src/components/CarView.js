@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CarDetails from "./CarDetails";
 import Logbook from "./Logbook";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Card, Nav } from "react-bootstrap";
 
 
 export default class CarView extends Component {
@@ -27,11 +27,31 @@ export default class CarView extends Component {
     return (
       <div>
         <h2>Fahrzeug Details</h2>
+       
         <Button variant="danger" onClick={this.deleteCar}>
-              Fahrzeug löschen
+          Fahrzeug löschen
             </Button>
-        <CarDetails carId = {this.props.match.params.id} />
-        <Logbook carId = {this.props.match.params.id} />
+        <div className="overview">
+          <CarDetails carId={this.props.match.params.id} />
+          <div className="car-details-logbook">
+            <Card>
+              <Card.Header>
+                <Nav variant="tabs" defaultActiveKey='#logbuch'>
+                  <Nav.Item>
+                    <Nav.Link href='#logbuch'>Logbuch</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link href='#rechnungen'>Rechnungen</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link href='#kosten'>Kostenauswertung</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Header>
+            </Card>
+            <Logbook carId={this.props.match.params.id} />
+          </div>
+        </div>
       </div>
     )
   }
