@@ -262,3 +262,7 @@ h2 {
   background: none;
   color: whitesmoke;
 }
+
+.logTableRowValue option {
+  color: black
+}
