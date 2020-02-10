@@ -54,14 +54,6 @@ export default class FuelStations extends Component {
     this.setState({ [name]: value });   
   }
 
-  //handleInputChangesSort = (event) => {
-  //  let value = event.target.value;
-  //  this.setState({
-  //    sortOrder: value,
-  //    selectedKey: "",
-  //  });   
-  //}
-
   handleInputChangesSort = (value) => {
     this.setState({
       sortOrder: value,
@@ -80,8 +72,13 @@ export default class FuelStations extends Component {
       //console.log(response.data);
       //console.log(response.data.stations);
       //console.log(response.data.testMode);
+      //prepare some of the data
+      let prepStations = response.data.stations.map(station => {
+        return station;
+      });
+
       this.setState({ 
-        fuelstations: response.data.stations,
+        fuelstations: prepStations,
         testMode: response.data.testMode
       });
     })
@@ -150,16 +147,30 @@ export default class FuelStations extends Component {
         }
       }).map((oneFuelStation, index) => {
         oneFuelStation['index'] = index;
-        if (oneFuelStation.hasOwnProperty('place')) {
+        if (!oneFuelStation.hasOwnProperty('city')) {
           oneFuelStation['city'] = oneFuelStation.place;  //renamed place to city as this solves an unexpected error in index.js
           delete oneFuelStation['place'];
         }
         (index === 0) ? oneFuelStation['color'] = "red" : oneFuelStation['color'] = "blue";
         return oneFuelStation;
       });
-      //console.log("sorted markers: ", googleMapsMarker);
     }
+    //console.log("sorted markers: ", googleMapsMarker);
     return googleMapsMarker;
+  }
+
+  addBrandIcons = (stations) => {
+    let enrichedStations = stations;
+    let currBrand = "Default";
+    if (!stations[0].hasOwnProperty('iconUrl')) {
+      enrichedStations = stations.map(station => {
+        currBrand = String(station.brand).toLowerCase();
+        station.iconUrl = './fuelStationIcons/' + currBrand + '.png';
+        console.log("brandIcons: ", station);
+        return station;
+      });
+    }
+    return enrichedStations;
   }
  
   render() {
@@ -167,30 +178,26 @@ export default class FuelStations extends Component {
     let sortOrder = this.state.sortOrder;
     let googleMapsCenter = this.calculateMapCenter(currFuelStations);
     let googleMapsMarker = this.prepareFuelStations(currFuelStations, sortOrder);
+    googleMapsMarker = this.addBrandIcons(googleMapsMarker);
+    //console.log(googleMapsMarker);
     let sidebar = (
       <div style={{textAlign: 'left'}}>
-        <div style={{position: 'sticky', top: '0px', backgroundColor: 'white'}}>
-          <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
-            <label htmlFor="zip" style={{color: '#007bff'}}>Plz:</label>
-            <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px'}} placeholder="z.B. 85083" />
-            <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px'}} size='sm' variant="outline-primary">OK</Button>
-          </form>
-          <DropdownButton id="dropdown-basic-button" title={`Sortierung: ${this.state.sortOrder}`} variant="outline-primary">
-            <Dropdown.Item onSelect={() => this.handleInputChangesSort("distance")}   >Entfernung</Dropdown.Item>
-            <Dropdown.Item onSelect={() => this.handleInputChangesSort("e5price")}    >E5-Preis</Dropdown.Item>
-            <Dropdown.Item onSelect={() => this.handleInputChangesSort("e10price")}   >E10-Preis</Dropdown.Item>
-            <Dropdown.Item onSelect={() => this.handleInputChangesSort("dieselprice")}>Diesel-Preis</Dropdown.Item>
-          </DropdownButton>
-
-          {/*<label htmlFor="sortOrder" style={{marginLeft: '5px'}}>Sortierung:</label>
-          <select name="sortOrder" onChange={this.handleInputChangesSort} style={{width: '13.5ch', marginLeft: "15px", borderColor: '#007bff', borderRadius: '3px'}}>
-            <option value="distance">Entfernung</option>
-            <option value="e5price">E5-Preis</option>
-            <option value="e10price">E10-Preis</option>
-            <option value="dieselprice">Diesel-Preis</option>
-          </select>*/}
-          <hr style={{marginTop: '0px'}}/>
+        <div style={{position: 'sticky', top: '0px', backgroundColor: 'white', display: 'flex', justifyContent: 'center'}}>
+          <div>
+            <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
+              <label htmlFor='zip' style={{color: '#007bff'}}>Plz:</label>
+              <input name='zip' type='text' minLength='5' maxLength='5' onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px'}} placeholder="z.B. 85083" />
+              <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px'}} size='sm' variant='outline-primary'>OK</Button>
+            </form>
+            <DropdownButton id="dropdown-basic-button" title={`Sortierung: ${this.state.sortOrder}`} variant="outline-primary">
+              <Dropdown.Item onSelect={() => this.handleInputChangesSort('distance')}   >Entfernung</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.handleInputChangesSort('e5price')}    >E5-Preis</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.handleInputChangesSort('e10price')}   >E10-Preis</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.handleInputChangesSort('dieselprice')}>Diesel-Preis</Dropdown.Item>
+            </DropdownButton>
+          </div>
         </div>
+        <hr style={{marginTop: '3px', marginBottom: '3px'}}/>
         {googleMapsMarker.map(oneStation => {
           if (oneStation.brand !== undefined) {
             return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
