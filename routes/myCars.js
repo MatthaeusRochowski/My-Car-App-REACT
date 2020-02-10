@@ -115,7 +115,7 @@ router.put("/:id", (req, res) => {
     });
 });
 
-// PUT /api/myCars/logbook/:id
+// POST /api/myCars/logbook/:id
 router.post("/logbook/:id", (req, res) => {
   console.log("Create logbook entry");
   console.log("Request: ", req.body);
@@ -127,6 +127,24 @@ router.post("/logbook/:id", (req, res) => {
       if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
         returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
       returnedCar.logbuch.unshift(logbookEntry);
+      returnedCar.save().then(logbook => {
+        res.json(logbook);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/logbook/:id
+router.put("/logbook/:id", (req, res) => {
+  console.log("Inside PUT Logbook Route -----> Change Logbook");
+  console.log("Inside PUT Logbook Route ----> Request: ", req.body);
+  const carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      returnedCar.logbuch = req.body.logbook
       returnedCar.save().then(logbook => {
         res.json(logbook);
       });

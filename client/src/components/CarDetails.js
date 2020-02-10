@@ -65,6 +65,7 @@ export default class CarDetails extends Component {
   };
 
   handleChange = event => {
+    console.log("Inside Car Details Change:", event)
     if (this.state.editActive) {
       const { name, value } = event.target;
       this.setState({ [name]: value });
@@ -95,6 +96,7 @@ export default class CarDetails extends Component {
         this.setState({
           editActive: false
         });
+        delete this.state.oldState
         //console.log(response.data);
       })
       .catch(err => {
