@@ -53,6 +53,7 @@ export default class Logbook extends Component {
         <h4>Fahrtenbuch</h4>
         <Table striped bordered hover variant="dark">
           <thead>
+          <tr>
             <th>Datum</th>
             <th>Startort</th>
             <th>Zielort</th>
@@ -61,6 +62,7 @@ export default class Logbook extends Component {
             <th>Strecke Gesamt</th>
             <th>Eintrag ändern</th>
             <th>Eintrag löschen</th>
+            </tr>
           </thead>
           <tbody>
             {this.state.logbook.map(log => {

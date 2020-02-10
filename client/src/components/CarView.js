@@ -28,11 +28,9 @@ export default class CarView extends Component {
       <div>
         <h2>Fahrzeug Details</h2>
        
-        <Button variant="danger" onClick={this.deleteCar}>
-          Fahrzeug löschen
-            </Button>
+        
         <div className="overview">
-          <CarDetails carId={this.props.match.params.id} />
+          <CarDetails carId={this.props.match.params.id} deleteHandler={this.deleteCar} />
           <div className="car-details-logbook">
             <Card>
               <Card.Header>
