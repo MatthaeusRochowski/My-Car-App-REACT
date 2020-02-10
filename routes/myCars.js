@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Car = require("../models/Car");
+//const Logbuch = require("../models/Car/Logbuch");
 const mongoose = require("mongoose");
 //const APIHandler = require("../APIhandler");
 //const outerAPIs = new APIHandler();
@@ -32,6 +33,7 @@ router.get("/:id", (req, res) => {
   }
 
   Car.findById(carId)
+    .populate()
     //  .populate("eigner_ref")
     .then(car => {
       res.json(car);
@@ -51,62 +53,82 @@ router.post("/", (req, res) => {
   console.log("inside post route", req.body);
 
   var car = new Car({
-      kennzeichen: req.body.car.kennzeichen,
-      hersteller: req.body.car.hersteller,
-      modell: req.body.car.modell,
-      kraftstoff: req.body.car.kraftstoff,
-      verbrauch: req.body.car.verbrauch,
-      leistung_ps: req.body.car.leistung_ps,
-      erstzulassung_monat: req.body.car.erstzulassung_monat,
-      erstzulassung_jahr: req.body.car.erstzulassung_jahr,
-      kaufpreis: req.body.car.kaufpreis,
-      kilometerstand: req.body.car.kilometerstand,
-      kaufdaten: {
-        kaufdatum: req.body.car.kaufdaten.kaufdatum,
-        kaufpreis: req.body.car.kaufdaten.kaufpreis,
-        laufleistung: req.body.car.kaufdaten.laufleistung
-      },
-      bild: req.body.car.bild,
-      publicId: req.body.car.publicId
-      })
+    kennzeichen: req.body.car.kennzeichen,
+    hersteller: req.body.car.hersteller,
+    modell: req.body.car.modell,
+    kraftstoff: req.body.car.kraftstoff,
+    verbrauch: req.body.car.verbrauch,
+    leistung_ps: req.body.car.leistung_ps,
+    erstzulassung_monat: req.body.car.erstzulassung_monat,
+    erstzulassung_jahr: req.body.car.erstzulassung_jahr,
+    kaufpreis: req.body.car.kaufpreis,
+    kilometerstand: req.body.car.kaufdaten.laufleistung,
+    kaufdaten: {
+      kaufdatum: req.body.car.kaufdaten.kaufdatum,
+      kaufpreis: req.body.car.kaufdaten.kaufpreis,
+      laufleistung: req.body.car.kaufdaten.laufleistung
+    },
+    bild: req.body.car.bild,
+    publicId: req.body.car.publicId
+  });
 
-      console.log("Post myCar", car)
+  console.log("Post myCar", car);
 
-    car.save()
+  car
+    .save()
 
-        .then(car => {
-          console.log("Car saved")
-          res.json(car);
-        })
-        .catch(err => {
-          res.status(500).json(err);
-        });
-    
+    .then(car => {
+      console.log("Car saved");
+      res.json(car);
+    })
+    .catch(err => {
+      res.status(500).json(err);
     });
-
+});
 
 // PUT /api/myCars/:id
+
 router.put("/:id", (req, res) => {
-  let car = req.body.car;
   let carId = req.params.id;
 
   Car.findById(carId)
     .then(returnedCar => {
-      returnedCar.kennzeichen = car.kennzeichen;
-      returnedCar.hersteller = car.hersteller;
-      returnedCar.modell = car.modell;
-      returnedCar.kraftstoff = car.kraftstoff;
-      returnedCar.verbrauch = car.verbrauch;
-      returnedCar.leistung_ps = car.leistung_ps;
-      returnedCar.erstzulassung_monat = car.erstzulassung_monat;
-      returnedCar.erstzulassung_jahr = car.erstzulassung_jahr;
-      returnedCar.kaufpreis = car.kaufpreis;
-      returnedCar.kilometerstand = car.kilometerstand;
-      returnedCar.kaufdaten.kaufdatum = car.kaufdaten.kaufdatum;
-      returnedCar.kaufdaten.kaufpreis = car.kaufdaten.kaufpreis;
-      returnedCar.kaufdaten.laufleistung = car.kaufdaten.laufleistung;
+      returnedCar.kennzeichen = req.body.kennzeichen;
+      returnedCar.hersteller = req.body.hersteller;
+      returnedCar.modell = req.body.modell;
+      returnedCar.kraftstoff = req.body.kraftstoff;
+      returnedCar.verbrauch = req.body.verbrauch;
+      returnedCar.leistung_ps = req.body.leistung_ps;
+      returnedCar.erstzulassung_monat = req.body.erstzulassung_monat;
+      returnedCar.erstzulassung_jahr = req.body.erstzulassung_jahr;
+      returnedCar.kaufpreis = req.body.kaufpreis;
+      returnedCar.kilometerstand = req.body.kilometerstand;
+      returnedCar.kaufdaten.kaufdatum = req.body.kaufdatum;
+      returnedCar.kaufdaten.kaufpreis = req.body.kaufpreis;
+      returnedCar.kaufdaten.laufleistung = req.body.kilometerstand_bei_kauf;
       returnedCar.save().then(car => {
         res.json(car);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/logbook/:id
+router.post("/logbook/:id", (req, res) => {
+  console.log("Create logbook entry");
+  console.log("Request: ", req.body);
+  const logbookEntry = req.body;
+  const carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
+        returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
+      returnedCar.logbuch.unshift(logbookEntry);
+      returnedCar.save().then(logbook => {
+        res.json(logbook);
       });
     })
     .catch(err => {
@@ -124,6 +146,29 @@ router.delete("/:id", (req, res) => {
       //return Task.deleteMany({ _id: { $in: project.tasks } }).then(() =>
       res.json({ message: "ok" });
       //);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// DELETE /api/myCars/logbook/:id
+router.delete("/logbook/delete", (req, res) => {
+  //console.log("Inside Delete Logook Route -----> request query: ", req.query),
+  const carId = req.query.carId;
+  const logId = req.query.logId;
+
+  console.log("Log to be deleted: ", logId);
+
+  Car.findById({ _id: mongoose.Types.ObjectId(carId) })
+    .then(foundCar => {
+      for (let index in foundCar.logbuch) {
+        if (foundCar.logbuch[index]._id.toString() === logId.toString()) {
+          foundCar.logbuch.splice(index, 1);
+          foundCar.save();
+          res.json({ foundCar });
+        }
+      }
     })
     .catch(err => {
       res.status(500).json(err);
