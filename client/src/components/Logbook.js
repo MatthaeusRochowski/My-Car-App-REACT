@@ -107,7 +107,7 @@ export default class Logbook extends Component {
     console.log("Logbook -----> rendered", this.state.logbook);
 
     return (
-      <div>
+      <div id='logbuch'>
         <h4>Fahrtenbuch</h4>
         {this.state.editActive === false &&
         <Button onClick={this.toggleEdit}>Logbuch ändern</Button>}

@@ -86,8 +86,47 @@ router.post("/", (req, res) => {
     });
 });
 
-// PUT /api/myCars/:id
+// POST /api/myCars/logbook/:id
+router.post("/logbook/:id", (req, res) => {
+  console.log("Create logbook entry");
+  console.log("Request: ", req.body);
+  const logbookEntry = req.body;
+  const carId = req.params.id;
 
+  Car.findById(carId)
+    .then(returnedCar => {
+      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
+        returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
+      returnedCar.logbuch.unshift(logbookEntry);
+      returnedCar.save().then(logbook => {
+        res.json(logbook);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// POST /api/myCars/invoice/:id
+router.post("/invoice/:id", (req, res) => {
+  console.log("Create invoice");
+  console.log("Request: ", req.body);
+  const invoice = req.body;
+  const carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      returnedCar.rechnungen.unshift(invoice);
+      returnedCar.save().then(invoices => {
+        res.json(invoices);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
   let carId = req.params.id;
 
@@ -108,27 +147,6 @@ router.put("/:id", (req, res) => {
       returnedCar.kaufdaten.laufleistung = req.body.kilometerstand_bei_kauf;
       returnedCar.save().then(car => {
         res.json(car);
-      });
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-});
-
-// POST /api/myCars/logbook/:id
-router.post("/logbook/:id", (req, res) => {
-  console.log("Create logbook entry");
-  console.log("Request: ", req.body);
-  const logbookEntry = req.body;
-  const carId = req.params.id;
-
-  Car.findById(carId)
-    .then(returnedCar => {
-      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
-        returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
-      returnedCar.logbuch.unshift(logbookEntry);
-      returnedCar.save().then(logbook => {
-        res.json(logbook);
       });
     })
     .catch(err => {
