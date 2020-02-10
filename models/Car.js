@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const carSchema = new Schema({
   eigner_ref: { type: Schema.Types.ObjectId, ref: "User" },
+  logbuch_ref: [{ type: Schema.Types.ObjectId, ref: "Logbook" }],
   kennzeichen: { type: String, unique: true }, //IN12345
   hersteller: { type: String }, //Honda
   modell: { type: String }, //Civic 1.8
@@ -19,7 +20,18 @@ const carSchema = new Schema({
   kilometerstand: { type: Number }, //12000 (updated by most recent kilometerstand_ende)
   bild: { type: String }, //http://cloudinary....
   bildPublicID: { type: String },
-  kilometerkosten: { type: Number } //experimental
+  kilometerkosten: { type: Number }, //experimental
+
+  logbuch: [
+    {
+      datum: { type: String }, //2020-12-31
+      strecke_km: { type: Number }, //50 (will be calculated kilometerstandende - kilometerstand_start)
+      startort: { type: String }, //zuhause
+      zielort: { type: String }, //arbeit
+      kilometerstand_start: { type: Number }, //12000 (defaulted to kilometerstand_aktuell)
+      kilometerstand_ende: { type: Number } //12050
+    }
+  ]
 });
 
 const Car = mongoose.model("Car", carSchema);
