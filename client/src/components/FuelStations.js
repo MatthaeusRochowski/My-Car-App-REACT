@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import Sidebar from "react-sidebar";
 import axios from "axios";
-import { Button, DropdownButton, Dropdown } from "react-bootstrap";
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import FuelStationsBarEntry from './FuelStationsBarEntry';
 import FuelStationMap from './FuelStationMap';
 
-const mql = window.matchMedia(`(min-width: 1200px)`);
+const mql = window.matchMedia(`(min-width: 500px)`);
 
 export default class FuelStations extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mql: window.matchMedia(`(min-width: 1200px)`),
-      sidebarDocked: mql.matches,
-      sidebarOpen: false,
+      mql: window.matchMedia(`(min-width: 500px)`),
+      sidebarDocked: true,
+      sidebarOpen: true,
       zip: "",
       fuelstations: [],
       sortOrder: "distance",
@@ -24,7 +24,7 @@ export default class FuelStations extends Component {
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
   }
  
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     mql.addListener(this.mediaQueryChanged);
   }
  
@@ -33,7 +33,7 @@ export default class FuelStations extends Component {
   }
  
   onSetSidebarOpen(open) {
-    this.setState({ sidebarOpen: open });
+    this.setState({ sidebarDocked: open, sidebarOpen: open });
   }
  
   mediaQueryChanged() {
@@ -74,6 +74,8 @@ export default class FuelStations extends Component {
       //console.log(response.data.testMode);
       //prepare some of the data
       let prepStations = response.data.stations.map(station => {
+        station.street = this.fixCaseOrientation(station.street);
+        station.place  = this.fixCaseOrientation(station.place);
         return station;
       });
 
@@ -82,6 +84,19 @@ export default class FuelStations extends Component {
         testMode: response.data.testMode
       });
     })
+  }
+
+  fixCaseOrientation = (inputStr) => {
+    let streetArr = inputStr.split(' ');
+    let fixedArr = [];
+    for (let word of streetArr) {
+      let fixedWord = "";
+      for (let i=0; i<word.length; i++) {
+        fixedWord += (i === 0 ? word[i].toUpperCase() : word[i].toLowerCase());
+      }
+      fixedArr.push(fixedWord);
+    }
+    return fixedArr.join(' ');
   }
 
   calculateMapCenter = (currFuelStations) => {
@@ -161,14 +176,19 @@ export default class FuelStations extends Component {
 
   addBrandIcons = (stations) => {
     let enrichedStations = stations;
-    let currBrand = "Default";
-    if (!stations[0].hasOwnProperty('iconUrl')) {
-      enrichedStations = stations.map(station => {
-        currBrand = String(station.brand).toLowerCase();
-        station.iconUrl = './fuelStationIcons/' + currBrand + '.png';
-        console.log("brandIcons: ", station);
-        return station;
-      });
+    if (enrichedStations.length > 0) {
+      let currBrand = "Default";
+      if (!stations[0].hasOwnProperty('iconUrl')) {
+        enrichedStations = stations.map(station => {
+          currBrand = String(station.brand).toLowerCase();
+          station.iconUrl = './fuelStationIcons/' + currBrand + '.png'; //no error handling yet - but works fine from display point of view
+          if (station.iconUrl.includes('undefined')) {
+            station.iconUrl = './fuelStationIcons/default.png';
+          }
+          //console.log("brandIcons: ", station);
+          return station;
+        });
+      }
     }
     return enrichedStations;
   }
@@ -182,22 +202,30 @@ export default class FuelStations extends Component {
     //console.log(googleMapsMarker);
     let sidebar = (
       <div style={{textAlign: 'left'}}>
-        <div style={{position: 'sticky', top: '0px', backgroundColor: 'white', display: 'flex', justifyContent: 'center'}}>
+        <div style={{position: 'sticky', top: '0px', backgroundColor: '#343a40', display: 'flex', justifyContent: 'center', zIndex: 1}}>
           <div>
             <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
-              <label htmlFor='zip' style={{color: '#007bff'}}>Plz:</label>
-              <input name='zip' type='text' minLength='5' maxLength='5' onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px'}} placeholder="z.B. 85083" />
-              <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px'}} size='sm' variant='outline-primary'>OK</Button>
+              <label htmlFor='zip' style={{color: '#17a2b8', fontWeight: 'bold'}}>Plz:</label>
+              <input id='zip' name='zip' type='text' minLength='5' maxLength='5' onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px', backgroundColor: '#343a40', borderColor: '#17a2b8', color: '#17a2b8', fontWeight: 'bold', textAlign: 'center'}} placeholder='z.B. 85083' />
+              <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px', fontWeight: 'bold'}} size='sm' variant='outline-info'>OK</Button>
             </form>
-            <DropdownButton id="dropdown-basic-button" title={`Sortierung: ${this.state.sortOrder}`} variant="outline-primary">
-              <Dropdown.Item onSelect={() => this.handleInputChangesSort('distance')}   >Entfernung</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.handleInputChangesSort('e5price')}    >E5-Preis</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.handleInputChangesSort('e10price')}   >E10-Preis</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.handleInputChangesSort('dieselprice')}>Diesel-Preis</Dropdown.Item>
-            </DropdownButton>
+            <Dropdown as={ButtonGroup}>
+              <Dropdown.Toggle id="dropdown-basic-button" variant="outline-info"><b>{'Sortierung: '}</b>{this.state.sortOrder}</Dropdown.Toggle>
+              <Dropdown.Menu className="fuelSortColors">
+              <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('distance')} style={{color: '#17a2b8'}}>Entfernung</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('e5price')} style={{color: '#17a2b8'}}>E5-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('e10price')} style={{color: '#17a2b8'}}>E10-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('dieselprice')} style={{color: '#17a2b8'}}>Diesel-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+              </Dropdown.Menu>
+            </Dropdown>{' '}
           </div>
         </div>
-        <hr style={{marginTop: '3px', marginBottom: '3px'}}/>
+        <hr style={{marginTop: '3px', marginBottom: '3px', backgroundColor: '#17a2b8'}}/>
         {googleMapsMarker.map(oneStation => {
           if (oneStation.brand !== undefined) {
             return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
@@ -207,11 +235,15 @@ export default class FuelStations extends Component {
       </div>
     );
 
+    let mainContent = (
+      googleMapsMarker.length > 0 ? <FuelStationMap key={googleMapsMarker.id} selectedKey={this.state.selectedKey} center={googleMapsCenter} markers={googleMapsMarker} sidebarButton={this.onSetSidebarOpen} sidebarButtonState={this.state.sidebarOpen}/> : <div><h1>Google API does not respond. Please to enter a Zip Code into the sidbar (left side) and press OK.</h1></div>
+    );
+
     return (
       <div id="sidebar">
         <Sidebar
-          children={googleMapsMarker.length > 0 ? <FuelStationMap key={googleMapsMarker.id} selectedKey={this.state.selectedKey} center={googleMapsCenter} markers={googleMapsMarker} /> : console.log("Frontend: FuelStations: FuelStationsBody.js - empty fuelstations state (array) - maps")}
-          styles={{root:{top: 40}}}
+          children={mainContent}
+          styles={{root:{top: 40, backgroundColor: '#343a40'}}}
           sidebar={sidebar}
           open={this.state.sidebarOpen}
           docked={this.state.sidebarDocked}

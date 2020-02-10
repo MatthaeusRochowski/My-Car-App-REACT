@@ -254,3 +254,29 @@ h2 {
   text-align: left;
   padding-left: 20px;
 }
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #17a2b8;
+  opacity: 1;   /* Firefox */
+  font-weight: 100;
+  text-align: left;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #17a2b8;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #17a2b8;
+}
+
+.fuelSortColors {
+  background-color: #343a40;
+  color: #17a2b8;
+  border: 1px solid #17a2b8;
+}
+
+.fuelSortDivider {
+  border-color: #17a2b8;
+  margin: 0.2rem 0.5rem;
+}
