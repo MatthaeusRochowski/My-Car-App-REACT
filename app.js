@@ -78,9 +78,6 @@ app.locals.title = "Express - Generated with IronGenerator";
 // ROUTES MIDDLEWARE STARTS HERE:
 console.log("Backend: entered app.js");
 
-const index = require("./routes/index");
-app.use("/", index);
-
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
@@ -92,5 +89,8 @@ app.use("/api/getFuelStations", fuelApiRoutes);
 
 const uploadRoutes = require('./routes/file-upload');
 app.use('/api/upload', uploadRoutes);
+
+const index = require("./routes/index");
+app.use("/", index);
 
 module.exports = app;
