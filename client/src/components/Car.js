@@ -47,7 +47,7 @@ export default class Car extends Component {
           <span>{this.props.car.kilometerstand} km</span>
         </p>
 
-        <Button>Fahrt eintragen</Button>
+        <Link to={`/myCars/${this.props.car._id}/addLog`}><Button>Fahrt eintragen</Button></Link>
         <Button>Rechnung erfassen</Button>
       </div>
     );
