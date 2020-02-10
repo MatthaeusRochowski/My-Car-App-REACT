@@ -8,7 +8,6 @@
     "bootstrap": "^4.4.1",
     "google-maps-react": "^2.0.2",
     "materialize-css": "^1.0.0",
-    "mdbreact": "^4.25.1",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-bootstrap-table": "^4.3.1",
