@@ -39,7 +39,7 @@ class App extends React.Component {
     console.log("App -----> rendered")
     return (
       <div className="App">
-        <Navbar user={this.state.user} setUser={this.setUser} />
+        <Navbar id="navbar" user={this.state.user} setUser={this.setUser} />
         <Switch>
           <Route exact path="/" component={Startpage} />
           <Route exact path="/signup" render={

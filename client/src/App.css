@@ -250,3 +250,7 @@ h2 {
   margin-top: 20px;
 }
 
+.fuelSidebarEntry {
+  text-align: left;
+  padding-left: 20px;
+}
