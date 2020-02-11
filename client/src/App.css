@@ -280,3 +280,25 @@ h2 {
   border-color: #17a2b8;
   margin: 0.2rem 0.5rem;
 }
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 10px #868e96; 
+  border-radius: 2px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #343a40; 
+  border: 1px solid #17a2b8;
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #17a2b8; 
+}
