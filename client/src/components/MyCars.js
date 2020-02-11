@@ -39,7 +39,7 @@ export default class MyCars extends Component {
         <h3>Dein aktueller Fuhrpark</h3>
         <section id="car-overview">
           <Link to="/addCar">
-            <Button type="submit">Fahrzeug hinzufügen</Button>
+            <Button variant="info" type="submit">Fahrzeug hinzufügen</Button>
           </Link>
           <div className="cards-container">
             {this.state.cars.map(car => {

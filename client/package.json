@@ -4,6 +4,9 @@
   "proxy": "http://localhost:5555",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "axios": "^0.19.0",
     "bootstrap": "^4.4.1",
     "google-maps-react": "^2.0.2",

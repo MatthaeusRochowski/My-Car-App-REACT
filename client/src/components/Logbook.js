@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Table, Button } from "react-bootstrap";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+
 
 
 export default class Logbook extends Component {
@@ -110,12 +113,13 @@ export default class Logbook extends Component {
       <div>
         <h4>Fahrtenbuch</h4>
         {this.state.editActive === false &&
-        <Button onClick={this.toggleEdit}>Logbuch ändern</Button>}
+        <Button variant="info" onClick={this.toggleEdit}>Logbuch ändern</Button>}
         {this.state.editActive && (
-          <Button onClick={this.handleSubmit} type="submit">Speichern</Button>
+          <Button variant="info" onClick={this.handleSubmit} type="submit">Speichern</Button>
         )}
         {this.state.editActive && (
           <Button
+            variant="info"
             type="reset"
             className="btn btn-default pull-right"
             onClick={this.handleCancel}
@@ -146,12 +150,12 @@ export default class Logbook extends Component {
                   <td><input name="kilometerstand_ende" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.kilometerstand_ende} /></td>
                   <td>{log.strecke_km}</td>
                   <td>
-                  {this.state.editActive && <Button
+                  {this.state.editActive && <FontAwesomeIcon
                       variant="danger"
+                      id="iconTrash"
                       onClick={() => this.deleteLogEntry(log._id)}
-                    >
-                      löschen
-                    </Button>}
+                      icon={faTrash}
+                    />}
                   </td>
                 </tr>
               );
