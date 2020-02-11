@@ -31,6 +31,21 @@ const carSchema = new Schema({
       kilometerstand_start: { type: Number }, //12000 (defaulted to kilometerstand_aktuell)
       kilometerstand_ende: { type: Number } //12050
     }
+  ],
+
+  rechnungen: [
+    {
+      datum: { type: String }, //2020-12-31
+      kilometerstand: { type: Number }, //12000
+      rechnungstyp: {
+        type: String,
+        enum: ["Tanken", "Werkstatt", "Versicherung", "Steuer", "Wertverlust"],
+        default: "Tanken"
+      },
+      betrag: { type: Number },
+      rechnungs_url: { type: String }, //http://cloudinary....
+      rechnungPublicID: { type: String }
+    }
   ]
 });
 

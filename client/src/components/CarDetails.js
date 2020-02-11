@@ -59,11 +59,13 @@ export default class CarDetails extends Component {
 
   toggleEdit = () => {
     this.setState({
+      oldState: this.state,
       editActive: !this.state.editActive
     });
   };
 
   handleChange = event => {
+    console.log("Inside Car Details Change:", event)
     if (this.state.editActive) {
       const { name, value } = event.target;
       this.setState({ [name]: value });
@@ -94,12 +96,20 @@ export default class CarDetails extends Component {
         this.setState({
           editActive: false
         });
+        delete this.state.oldState
         //console.log(response.data);
       })
       .catch(err => {
         console.log(err);
       });
   };
+
+  handleCancel = event => {
+   this.setState(
+     this.state.oldState
+   )
+   delete this.state.oldState
+  }
 
   render() {
     //console.log("CarDetails -----> rendered");
@@ -111,6 +121,7 @@ export default class CarDetails extends Component {
         <div className="car-details">
           <div className="car-details-form">
             <Button onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
+            <Button variant="danger" onClick={this.props.deleteHandler}>Fahrzeug löschen</Button>
 
             <div className="overview">
               <div>
@@ -251,7 +262,7 @@ export default class CarDetails extends Component {
                   {this.state.editActive &&
                     <Button type="submit">Änderungen übernehmen</Button>}
                   {this.state.editActive &&
-                    <Button type="reset" class="btn btn-default pull-right">Abbrechen</Button>}
+                    <Button type="reset" className="btn btn-default pull-right" onClick = {this.handleCancel}>Abbrechen</Button>}
                 </form>
               </div>
             </div>

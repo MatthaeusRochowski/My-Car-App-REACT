@@ -255,6 +255,18 @@ h2 {
   padding-left: 20px;
 }
 
+.logTableRowValue {
+  border: none;
+  outline-style: none;
+  text-align: right;
+  background: none;
+  color: whitesmoke;
+}
+
+.logTableRowValue option {
+  color: black
+}
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #17a2b8;
   opacity: 1;   /* Firefox */
@@ -301,4 +313,3 @@ h2 {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #17a2b8; 
-}
