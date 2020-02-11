@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import CarDetails from "./CarDetails";
 import Logbook from "./Logbook";
+import Invoices from "./Invoices";
+import Report from "./Report";
 import axios from "axios";
-import { Button, Card, Nav } from "react-bootstrap";
+import { Card, Nav, Button } from "react-bootstrap";
 
 
 export default class CarView extends Component {
+  state = {
+    view: 'logbook'
+  }
 
   deleteCar = () => {
     const id = this.props.match.params.id;
@@ -21,6 +26,14 @@ export default class CarView extends Component {
       });
   };
 
+  handleView = (view) => {
+    console.log("Inside CarView -----> open view for: ", view)
+    this.setState({
+      view: view
+    })
+
+  }
+
   render() {
     console.log("CarView -----> rendered")
     console.log("CarView ----> props: ", this.props);
@@ -28,28 +41,29 @@ export default class CarView extends Component {
       <div>
         <h2>Fahrzeug Details</h2>
        
-        <Button variant="danger" onClick={this.deleteCar}>
-          Fahrzeug löschen
-            </Button>
+        
         <div className="overview">
-          <CarDetails carId={this.props.match.params.id} />
+          <CarDetails carId={this.props.match.params.id} deleteHandler={this.deleteCar} />
           <div className="car-details-logbook">
             <Card>
               <Card.Header>
                 <Nav variant="tabs" defaultActiveKey='#logbuch'>
                   <Nav.Item>
-                    <Nav.Link href='#logbuch'>Logbuch</Nav.Link>
+                    <Button onClick={() => this.handleView('logbook')}>Logbuch</Button>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link href='#rechnungen'>Rechnungen</Nav.Link>
+                    <Button onClick={() => this.handleView('invoices')}>Rechnungen</Button>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link href='#kosten'>Kostenauswertung</Nav.Link>
+                    <Button onClick={() => this.handleView('report')}>Kostenauswertung</Button>
                   </Nav.Item>
                 </Nav>
               </Card.Header>
             </Card>
-            <Logbook carId={this.props.match.params.id} />
+            {this.state.view === 'logbook' && <Logbook carId={this.props.match.params.id} />}
+            {this.state.view === 'invoices' && <Invoices carId={this.props.match.params.id} />}
+            {this.state.view === 'report' && <Report carId={this.props.match.params.id} />}
+       
           </div>
         </div>
       </div>

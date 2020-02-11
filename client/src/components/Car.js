@@ -48,7 +48,7 @@ export default class Car extends Component {
         </p>
 
         <Link to={`/myCars/${this.props.car._id}/addLog`}><Button>Fahrt eintragen</Button></Link>
-        <Button>Rechnung erfassen</Button>
+        <Link to={`/myCars/${this.props.car._id}/addInvoice`}><Button>Rechnung erfassen</Button></Link>
       </div>
     );
   }

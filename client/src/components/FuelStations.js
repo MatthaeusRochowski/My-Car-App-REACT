@@ -1,19 +1,64 @@
 import React, { Component } from 'react';
+import Sidebar from "react-sidebar";
 import axios from "axios";
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
+import FuelStationsBarEntry from './FuelStationsBarEntry';
 import FuelStationMap from './FuelStationMap';
 
+const mql = window.matchMedia(`(min-width: 500px)`);
+
 export default class FuelStations extends Component {
-  //test mode is controlled by servers routes/fuelApi.js with the intend to limit the api calls to tankerkönig 
-  state = {
-    zip: "",
-    fuelstations: [],
-    sortOrder: "distance",
-    testMode: true
+  constructor(props) {
+    super(props);
+    this.state = {
+      mql: window.matchMedia(`(min-width: 500px)`),
+      sidebarDocked: true,
+      sidebarOpen: true,
+      zip: "",
+      fuelstations: [],
+      sortOrder: "distance",
+      testMode: true,         //test mode is controlled by servers routes/fuelApi.js with the intend to limit the api calls to tankerkönig 
+      selectedKey: "",
+    };
+    this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
+    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+  }
+ 
+  UNSAFE_componentWillMount() {
+    mql.addListener(this.mediaQueryChanged);
+  }
+ 
+  componentWillUnmount() {
+    this.state.mql.removeListener(this.mediaQueryChanged);
+  }
+ 
+  onSetSidebarOpen(open) {
+    this.setState({ sidebarDocked: open, sidebarOpen: open });
+  }
+ 
+  mediaQueryChanged() {
+    this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
+  }
+
+  handleSidebarEntryClick = (id) => {
+    //console.log("Sidebar-Entry clicked: ", id);
+    {/*toggle*/}
+    if ((this.state.selectedKey === "") || ((this.state.selectedKey !== id))) {
+      this.setState({ selectedKey: id }); 
+    }
+    else this.setState({ selectedKey: "" }); 
   }
 
   handleInputChanges = (event) => {
     let { name, value } = event.target;
     this.setState({ [name]: value });   
+  }
+
+  handleInputChangesSort = (value) => {
+    this.setState({
+      sortOrder: value,
+      selectedKey: "",
+    });   
   }
 
   handleFormSubmit = (event) => {
@@ -27,19 +72,37 @@ export default class FuelStations extends Component {
       //console.log(response.data);
       //console.log(response.data.stations);
       //console.log(response.data.testMode);
+      //prepare some of the data
+      let prepStations = response.data.stations.map(station => {
+        station.street = this.fixCaseOrientation(station.street);
+        station.place  = this.fixCaseOrientation(station.place);
+        return station;
+      });
+
       this.setState({ 
-        fuelstations: response.data.stations,
+        fuelstations: prepStations,
         testMode: response.data.testMode
       });
     })
   }
 
-  calculateMapCenter = () => {
-    let googleMapsCenter = {lat: 48.731, lng: 11.187};
-    let currFuelStations = this.state.fuelstations;
+  fixCaseOrientation = (inputStr) => {
+    let streetArr = inputStr.split(' ');
+    let fixedArr = [];
+    for (let word of streetArr) {
+      let fixedWord = "";
+      for (let i=0; i<word.length; i++) {
+        fixedWord += (i === 0 ? word[i].toUpperCase() : word[i].toLowerCase());
+      }
+      fixedArr.push(fixedWord);
+    }
+    return fixedArr.join(' ');
+  }
 
+  calculateMapCenter = (currFuelStations) => {
+    let googleMapsCenter = {lat: 48.731, lng: 11.187};
     if (currFuelStations.length > 0) {
-      let googleMapsCenter = currFuelStations.reduce(function (acc, cur) {
+      googleMapsCenter = currFuelStations.reduce(function (acc, cur) {
         let res = {minLat: cur.lat, maxLat: cur.lat, minLng: cur.lng, maxLng: cur.lng}
         acc.minLat > cur.lat ? res.minLat = cur.lat : res.minLat = acc.minLat
         acc.minLng > cur.lng ? res.minLng = cur.lng : res.minLng = acc.minLng
@@ -56,15 +119,12 @@ export default class FuelStations extends Component {
     return googleMapsCenter;
   }
 
-  prepareFuelStations = () => {
-    //console.log("Frontend: FuelStations: FuelStations.js - testMode:", this.state.testMode ? 'ON' : 'OFF');
-    //console.log("Frontend: FuelStations: FuelStations.js - fuelstation state:", this.state.fuelstations);
-    //console.log("Frontend: FuelStations: FuelStations.js - sortOrder state:", this.state.sortOrder);
-    let googleMapsMarker = {lat: 48.731, lng: 11.187};
-    let currFuelStations = this.state.fuelstations;
-
+  prepareFuelStations = (currFuelStations, sortOrder) => {
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - testMode:", this.props.testMode ? 'ON' : 'OFF');
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - fuelstation props:", this.props.fuelstations);
+    //console.log("Frontend: FuelStations: FuelStationsBody.js - sortOrder props:", this.props.sortOrder);
+    let googleMapsMarker = [{lat: 48.731, lng: 11.187, index: 0}];
     if (currFuelStations.length > 0) {
-      let sortOrder = this.state.sortOrder;
       googleMapsMarker = currFuelStations.sort(function(stationA, stationB) {
         switch(sortOrder) {
           case "distance":
@@ -102,47 +162,95 @@ export default class FuelStations extends Component {
         }
       }).map((oneFuelStation, index) => {
         oneFuelStation['index'] = index;
-        if (oneFuelStation.hasOwnProperty('place')) {
+        if (!oneFuelStation.hasOwnProperty('city')) {
           oneFuelStation['city'] = oneFuelStation.place;  //renamed place to city as this solves an unexpected error in index.js
           delete oneFuelStation['place'];
         }
         (index === 0) ? oneFuelStation['color'] = "red" : oneFuelStation['color'] = "blue";
         return oneFuelStation;
       });
-      //console.log("sorted markers: ", googleMapsMarker);
     }
+    //console.log("sorted markers: ", googleMapsMarker);
     return googleMapsMarker;
   }
 
+  addBrandIcons = (stations) => {
+    let enrichedStations = stations;
+    if (enrichedStations.length > 0) {
+      let currBrand = "Default";
+      if (!stations[0].hasOwnProperty('iconUrl')) {
+        enrichedStations = stations.map(station => {
+          currBrand = String(station.brand).toLowerCase();
+          station.iconUrl = './fuelStationIcons/' + currBrand + '.png'; //no error handling yet - but works fine from display point of view
+          if (station.iconUrl.includes('undefined')) {
+            station.iconUrl = './fuelStationIcons/default.png';
+          }
+          //console.log("brandIcons: ", station);
+          return station;
+        });
+      }
+    }
+    return enrichedStations;
+  }
+ 
   render() {
-    console.log("Frontend: FuelStations: FuelStations.js - render invoked");
     let currFuelStations = this.state.fuelstations;
-    let googleMapsCenter = this.calculateMapCenter();
-    let googleMapsMarker = this.prepareFuelStations();
-
-    let mapsForm = (
-      <div>
-        <form onSubmit={this.handleFormSubmit}>
-          <label htmlFor="zip">Postleitzahl: </label>
-          <input name="zip" type="text" minLength="5" maxLength="5" onChange={this.handleInputChanges} placeholder="z.B. 85083" />
-          <label htmlFor="sortOrder">Sortierung nach: </label>
-          <button type="submit">Request</button>
-        </form>
-        <select name="sortOrder" onChange={this.handleInputChanges}>
-          <option value="distance">Entfernung</option>
-          <option value="e5price">E5-Preis</option>
-          <option value="e10price">E10-Preis</option>
-          <option value="dieselprice">Diesel-Preis</option>
-        </select>
+    let sortOrder = this.state.sortOrder;
+    let googleMapsCenter = this.calculateMapCenter(currFuelStations);
+    let googleMapsMarker = this.prepareFuelStations(currFuelStations, sortOrder);
+    googleMapsMarker = this.addBrandIcons(googleMapsMarker);
+    //console.log(googleMapsMarker);
+    let sidebar = (
+      <div style={{textAlign: 'left'}}>
+        <div style={{position: 'sticky', top: '0px', backgroundColor: '#343a40', display: 'flex', justifyContent: 'center', zIndex: 1}}>
+          <div>
+            <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
+              <label htmlFor='zip' style={{color: '#17a2b8', fontWeight: 'bold'}}>Plz:</label>
+              <input id='zip' name='zip' type='text' minLength='5' maxLength='5' onChange={this.handleInputChanges} style={{height: '31px', width: '9ch', marginLeft: '10px', padding: '0px', borderRadius: '3px', backgroundColor: '#343a40', borderColor: '#17a2b8', color: '#17a2b8', fontWeight: 'bold', textAlign: 'center'}} placeholder='z.B. 85083' />
+              <Button type="submit" style={{margin: '-3px 5px 0px 1px', padding: '4px 21px', fontWeight: 'bold'}} size='sm' variant='outline-info'>OK</Button>
+            </form>
+            <Dropdown as={ButtonGroup}>
+              <Dropdown.Toggle id="dropdown-basic-button" variant="outline-info"><b>{'Sortierung: '}</b>{this.state.sortOrder}</Dropdown.Toggle>
+              <Dropdown.Menu className="fuelSortColors">
+              <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('distance')} style={{color: '#17a2b8'}}>Entfernung</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('e5price')} style={{color: '#17a2b8'}}>E5-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('e10price')} style={{color: '#17a2b8'}}>E10-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+                <Dropdown.Item onSelect={() => this.handleInputChangesSort('dieselprice')} style={{color: '#17a2b8'}}>Diesel-Preis</Dropdown.Item>
+                <Dropdown.Divider className="fuelSortDivider" />
+              </Dropdown.Menu>
+            </Dropdown>{' '}
+          </div>
+        </div>
+        <hr style={{marginTop: '3px', marginBottom: '3px', backgroundColor: '#17a2b8'}}/>
+        {googleMapsMarker.map(oneStation => {
+          if (oneStation.brand !== undefined) {
+            return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
+          }
+          return null;
+        })}
       </div>
-    ) 
+    );
+
+    let mainContent = (
+      googleMapsMarker.length > 0 ? <FuelStationMap key={googleMapsMarker.id} selectedKey={this.state.selectedKey} center={googleMapsCenter} markers={googleMapsMarker} sidebarButton={this.onSetSidebarOpen} sidebarButtonState={this.state.sidebarOpen}/> : <div><h1>Google API does not respond. Please to enter a Zip Code into the sidbar (left side) and press OK.</h1></div>
+    );
 
     return (
-      <div>
-        <h1>Tankstellen im Umkreis</h1>
-        {mapsForm}
-        {currFuelStations.length > 0 ? <FuelStationMap center={googleMapsCenter} markers={googleMapsMarker} /> : console.log("Frontend: FuelStations: FuelStations.js - empty fuelstations state (array) - maps")}
+      <div id="sidebar">
+        <Sidebar
+          children={mainContent}
+          styles={{root:{top: 40, backgroundColor: '#343a40'}}}
+          sidebar={sidebar}
+          open={this.state.sidebarOpen}
+          docked={this.state.sidebarDocked}
+          onSetOpen={this.onSetSidebarOpen}
+        >
+        </Sidebar>
       </div>
-    )
+    );
   }
 }
