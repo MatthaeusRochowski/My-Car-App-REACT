@@ -86,8 +86,47 @@ router.post("/", (req, res) => {
     });
 });
 
-// PUT /api/myCars/:id
+// POST /api/myCars/logbook/:id
+router.post("/logbook/:id", (req, res) => {
+  console.log("Create logbook entry");
+  console.log("Request: ", req.body);
+  const logbookEntry = req.body;
+  const carId = req.params.id;
 
+  Car.findById(carId)
+    .then(returnedCar => {
+      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
+        returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
+      returnedCar.logbuch.unshift(logbookEntry);
+      returnedCar.save().then(logbook => {
+        res.json(logbook);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// POST /api/myCars/invoice/:id
+router.post("/invoice/:id", (req, res) => {
+  console.log("Create invoice");
+  console.log("Request: ", req.body);
+  const invoice = req.body;
+  const carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      returnedCar.rechnungen.unshift(invoice);
+      returnedCar.save().then(invoices => {
+        res.json(invoices);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
   let carId = req.params.id;
 
@@ -116,19 +155,34 @@ router.put("/:id", (req, res) => {
 });
 
 // PUT /api/myCars/logbook/:id
-router.post("/logbook/:id", (req, res) => {
-  console.log("Create logbook entry");
-  console.log("Request: ", req.body);
-  const logbookEntry = req.body;
+router.put("/logbook/:id", (req, res) => {
+  console.log("Inside PUT Logbook Route -----> Change Logbook");
+  console.log("Inside PUT Logbook Route ----> Request: ", req.body);
   const carId = req.params.id;
 
   Car.findById(carId)
     .then(returnedCar => {
-      if (logbookEntry.kilometerstand_ende > returnedCar.kilometerstand)
-        returnedCar.kilometerstand = logbookEntry.kilometerstand_ende;
-      returnedCar.logbuch.unshift(logbookEntry);
+      returnedCar.logbuch = req.body.logbook
       returnedCar.save().then(logbook => {
         res.json(logbook);
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// PUT /api/myCars/logbook/:id
+router.put("/invoice/:id", (req, res) => {
+  console.log("Inside PUT Invoice Route -----> Change Invoice");
+  console.log("Inside PUT Invoice Route ----> Request: ", req.body);
+  const carId = req.params.id;
+
+  Car.findById(carId)
+    .then(returnedCar => {
+      returnedCar.rechnungen = req.body.invoices
+      returnedCar.save().then(invoices => {
+        res.json(invoices);
       });
     })
     .catch(err => {
@@ -152,7 +206,7 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-// DELETE /api/myCars/logbook/:id
+// DELETE /api/myCars/logbook
 router.delete("/logbook/delete", (req, res) => {
   //console.log("Inside Delete Logook Route -----> request query: ", req.query),
   const carId = req.query.carId;
@@ -165,6 +219,29 @@ router.delete("/logbook/delete", (req, res) => {
       for (let index in foundCar.logbuch) {
         if (foundCar.logbuch[index]._id.toString() === logId.toString()) {
           foundCar.logbuch.splice(index, 1);
+          foundCar.save();
+          res.json({ foundCar });
+        }
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// DELETE /api/myCars/invoice
+router.delete("/invoice/delete", (req, res) => {
+  //console.log("Inside Delete Invoice Route -----> request query: ", req.query),
+  const carId = req.query.carId;
+  const invoiceId = req.query.invoiceId;
+
+  console.log("Invoice to be deleted: ", invoiceId);
+
+  Car.findById({ _id: mongoose.Types.ObjectId(carId) })
+    .then(foundCar => {
+      for (let index in foundCar.rechnungen) {
+        if (foundCar.rechnungen[index]._id.toString() === invoiceId.toString()) {
+          foundCar.rechnungen.splice(index, 1);
           foundCar.save();
           res.json({ foundCar });
         }
