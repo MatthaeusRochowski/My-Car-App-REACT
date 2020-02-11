@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
 import service from "../services/upload.js";
 
 class AddCar extends Component {
@@ -98,112 +98,129 @@ class AddCar extends Component {
     console.log("State: ", this.state);
 
     return (
-      <div>
+      <div className="carAddPage">
+        <h3>Füge dein neues Auto hinzu:</h3>
+      <div className="addFormInput">
         <Form onSubmit={this.handleSubmit}>
-          <Form.Group>
-            <Form.Label htmlFor="kennzeichen">Kennzeichen: </Form.Label>
-            <Form.Control
+         {/* <Form.Group> */}
+            <Form.Row>
+              <Col>
+            <Form.Control className="formInput"
               type="text"
               name="kennzeichen"
-              id="kennzeichen"
+              placeholder="Kennzeichen"
               value={this.state.car.kennzeichen}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="hersteller">Hersteller: </Form.Label>
-            <Form.Control
+            </Col>
+            <Col>
+            <Form.Control className="formInput"
               type="text"
               name="hersteller"
-              id="hersteller"
+              placeholder="Hersteller"
               value={this.state.car.hersteller}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="modell">Modell: </Form.Label>
-            <Form.Control
+            </Col>
+            </Form.Row>
+            <Form.Row>
+              <Col>
+            <Form.Control className="formInput"
               type="text"
               name="modell"
-              id="modell"
+              placeholder="Modell"
               value={this.state.car.modell}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="kraftstoff">Kraftstoff: </Form.Label>
-            <Form.Control
+            </Col>
+            <Col>
+            <Form.Control className="formInput"
               type="text"
               name="kraftstoff"
-              id="kraftstoff"
+              placeholder="Kraftstoff"
               value={this.state.car.kraftstoff}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="verbrauch">Verbrauch: </Form.Label>
-            <Form.Control
+            </Col>
+            </Form.Row>
+            <Form.Row>
+              <Col>
+            <Form.Control className="formInput"
               type="text"
               name="verbrauch"
-              id="verbrauch"
+              placeholder="Verbrauch l/100km"
               value={this.state.car.verbrauch}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="leistung_ps">PS: </Form.Label>
-            <Form.Control
+            </Col>
+            <Col>
+            <Form.Control className="formInput"
               type="text"
               name="leistung_ps"
-              id="leistung_ps"
+              placeholder="PS"
               value={this.state.car.leistung_ps}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="erstzulassung_monat">
-              Erstzulassung Monat:{" "}
-            </Form.Label>
-            <Form.Control
+            </Col>
+            </Form.Row>
+            <Form.Row>
+              <Col>
+            <Form.Control className="formInput"
               type="text"
               name="erstzulassung_monat"
-              id="erstzulassung_monat"
+              placeholder="Erstzulassung Monat"
               value={this.state.car.erstzulassung_monat}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="erstzulassung_jahr">
-              Erstzulassung Jahr:{" "}
-            </Form.Label>
-            <Form.Control
+            </Col>
+            <Col>
+            <Form.Control className="formInput"
               type="text"
               name="erstzulassung_jahr"
-              id="erstzulassung_jahr"
+              placeholder="Erstzulassung Jahr"
               value={this.state.car.erstzulassung_jahr}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="kaufdatum">Kaufdatum: </Form.Label>
-            <Form.Control
+            </Col>
+            </Form.Row>
+            
+            <Form.Control className="formInput"
               type="text"
               name="kaufdatum"
-              id="kaufdatum"
+              placeholder="Kaufdatum"
               value={this.state.car.kaufdaten.kaufdatum}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="kaufpreis">Kaufpreis: </Form.Label>
-            <Form.Control
+            <Form.Row>
+              <Col>
+            <Form.Control className="formInput"
               type="text"
               name="kaufpreis"
-              id="kaufpreis"
+              placeholder="Kaufpreis"
               value={this.state.car.kaufdaten.kaufpreis}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="laufleistung">Kilometerstand: </Form.Label>
-            <Form.Control
+            </Col>
+            <Col>
+            <Form.Control className="formInput"
               type="text"
               name="laufleistung"
-              id="laufleistung"
+              placeholder="Kilometerstand"
               value={this.state.car.kaufdaten.laufleistung}
               onChange={this.handleChange}
             />
-            <Form.Label htmlFor="bild">Bild: </Form.Label>
-            <Form.Control
+             </Col>
+            </Form.Row>
+            <Form.Control className="formInput"
               type="file"
               name="bild"
-              id="bild"
               onChange={this.handleFileSelect}
             />
-          </Form.Group>
-
-          <Button type="submit">Speichern</Button>
-        </Form>
+         {/* </Form.Group>*/}
+         </Form>
+          <Button variant="info" type="submit">Speichern</Button>
+        
+      </div>
       </div>
     );
   }

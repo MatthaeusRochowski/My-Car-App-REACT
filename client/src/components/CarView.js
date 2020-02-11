@@ -45,17 +45,17 @@ export default class CarView extends Component {
         <div className="overview">
           <CarDetails carId={this.props.match.params.id} deleteHandler={this.deleteCar} />
           <div className="car-details-logbook">
-            <Card>
+            <Card bg="dark">
               <Card.Header>
                 <Nav variant="tabs" defaultActiveKey='#logbuch'>
                   <Nav.Item>
-                    <Button onClick={() => this.handleView('logbook')}>Logbuch</Button>
+                    <Button variant="info" onClick={() => this.handleView('logbook')}>Logbuch</Button>
                   </Nav.Item>
                   <Nav.Item>
-                    <Button onClick={() => this.handleView('invoices')}>Rechnungen</Button>
+                    <Button variant="info" onClick={() => this.handleView('invoices')}>Rechnungen</Button>
                   </Nav.Item>
                   <Nav.Item>
-                    <Button onClick={() => this.handleView('report')}>Kostenauswertung</Button>
+                    <Button variant="info" onClick={() => this.handleView('report')}>Kostenauswertung</Button>
                   </Nav.Item>
                 </Nav>
               </Card.Header>
