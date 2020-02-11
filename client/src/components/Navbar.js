@@ -12,7 +12,7 @@ const Navbar = props => {
   };
 
   return (
-    <Nav className="nav justify-content-end" bg="primary">
+    <Nav className="nav justify-content-end" bg="primary" style={{position: 'sticky', top: '0px', width: '100%', zIndex: '2'}}>
       {props.user ? (
         <div>
           <Link to="/myCars">Mein Fuhrpark</Link>

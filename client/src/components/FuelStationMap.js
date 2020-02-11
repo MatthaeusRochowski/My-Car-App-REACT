@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import { Button } from "react-bootstrap";
 
-const style = { width: '100%', height: '100%' };
+const mapStyle = { width: '100%', height: '100%', zIndex: '0' };
+const sideBarButtonStyle = { position: 'absolute', top: '100px', left: '-3px', border: '0px', backgroundColor: '#343a40', color: '#17a2b8', fontWeight: 'bold', zIndex: '2', fontSize: '1.5rem', padding: '0px 6px 5px 6px' };
 
 export class FuelStationMap extends Component {
   state = {
@@ -9,6 +11,10 @@ export class FuelStationMap extends Component {
     activeMarker: {},
     selectedPlace: {},
   };
+
+  onButtonClicked = () => {
+    this.props.sidebarButton(!this.props.sidebarButtonState);
+  }
 
   onMarkerClick = (props, marker, e) =>
     this.setState({
@@ -35,10 +41,12 @@ export class FuelStationMap extends Component {
       bounds.extend(points[i]);
     }
 
+    let buttonText = (this.props.sidebarButtonState ? '<' : '>')
+
     //console.log("selected Sidebar Key: ", this.props.selectedKey);
     return (
-      <div>
-        <Map google={this.props.google} initialCenter={this.props.center} bounds={bounds} style={style} onClick={this.onMapClicked} streetViewControl={false} rotateControl={false}>
+      <div style={{position: 'absolute', height: '100%', width: '100%'}}>
+        <Map google={this.props.google} initialCenter={this.props.center} bounds={bounds} style={mapStyle} onClick={this.onMapClicked} streetViewControl={false} rotateControl={false}>
           {this.props.markers.map(marker => {
             let imgUrl = '';
             if (marker.hasOwnProperty('color')) {
@@ -66,6 +74,7 @@ export class FuelStationMap extends Component {
               </div>
           </InfoWindow>
         </Map>
+        <Button onClick={this.onButtonClicked} style={sideBarButtonStyle} size='sm' variant='outline-info'>{buttonText}</Button>
       </div>
     );
   }
