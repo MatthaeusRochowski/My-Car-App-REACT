@@ -93,7 +93,7 @@ class AddLog extends Component {
             <Form.Control
               type="text"
               name="datum"
-              id="datum"
+              className="formInput"
               value={this.state.datum}
               onChange={this.handleChange}
             />
@@ -101,21 +101,21 @@ class AddLog extends Component {
             <Form.Control
               type="text"
               name="startort"
-              id="startort"
+              className="formInput"
               onChange={this.handleChange}
             />
             <Form.Label htmlFor="zielort">Nach: </Form.Label>
             <Form.Control
               type="text"
               name="zielort"
-              id="zielort"
+              className="formInput"
               onChange={this.handleChange}
             />
             <Form.Label htmlFor="kilometerstand_start">Km Start: </Form.Label>
             <Form.Control
               type="text"
               name="kilometerstand_start"
-              id="kilometerstand_start"
+              className="formInput"
               value={this.state.kilometerstand_start}
               onChange={this.handleChange}
             />
@@ -123,12 +123,12 @@ class AddLog extends Component {
             <Form.Control
               type="text"
               name="kilometerstand_ende"
-              id="kilometerstand_ende"
+              className="formInput"
               onChange={this.handleChange}
             />
           </Form.Group>
 
-          <Button type="submit">Speichern</Button>
+          <Button variant="info" type="submit">Speichern</Button>
         </Form>
       </div>
     );
