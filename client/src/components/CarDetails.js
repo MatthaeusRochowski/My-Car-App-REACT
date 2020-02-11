@@ -249,9 +249,9 @@ export default class CarDetails extends Component {
                     </tbody>
                   </Table>
                   {this.state.editActive &&
-                    <Button type="submit">Änderungen übernehmen</Button>}
+                    <Button variant="info" type="submit">Änderungen übernehmen</Button>}
                   {this.state.editActive &&
-                    <Button type="reset" class="btn btn-default pull-right">Abbrechen</Button>}
+                    <Button variant="info" type="reset" class="btn btn-default pull-right">Abbrechen</Button>}
                 </form>
               </div>
             </div>
