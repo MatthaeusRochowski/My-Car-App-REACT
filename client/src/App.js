@@ -16,7 +16,7 @@ import FuelStations from "./components/FuelStations";
 
 class App extends React.Component {
   state = {
-    user: this.props.user
+    user: this.props.user,
   };
 
   setUser = user => {
@@ -39,7 +39,8 @@ class App extends React.Component {
     console.log("App -----> rendered")
     return (
       <div className="App">
-        <Navbar id="navbar" user={this.state.user} setUser={this.setUser} />
+        <div>
+        <Navbar user={this.state.user} setUser={this.setUser} />
         <Switch>
           <Route exact path="/" component={Startpage} />
           <Route exact path="/signup" render={
@@ -63,6 +64,7 @@ class App extends React.Component {
           }/>
           <Route exact path="/fuelstations" component={FuelStations} />
         </Switch>
+        </div>
       </div>
     );
   }

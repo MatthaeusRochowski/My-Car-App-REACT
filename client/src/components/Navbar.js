@@ -12,7 +12,11 @@ const Navbar = props => {
   };
 
   return (
-    <Nav className="nav justify-content-end" bg="primary" style={{position: 'sticky', top: '0px', width: '100%', zIndex: '2'}}>
+    <Nav className="nav" bg='dark' style={{display: 'flex', justifyContent: 'space-between', position: 'sticky', top: '0px', width: '100%', zIndex: '2' }}>
+      <div>
+      <Link to="/" className="logo">My-Car-App</Link>
+      </div>
+      <div>
       {props.user ? (
         <div>
           <Link to="/myCars">Mein Fuhrpark</Link>
@@ -22,12 +26,15 @@ const Navbar = props => {
           </Link>
         </div>
       ) : (
-        <div >
+        <div>
+          <div>
           <Link to="/" >Home</Link>
           <Link to="/signup">Signup</Link>
           <Link to="/login">Login</Link>
+          </div>
         </div>
       )}
+      </div>
     </Nav>
   );
 };

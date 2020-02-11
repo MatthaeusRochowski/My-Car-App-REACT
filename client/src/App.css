@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  background: url(image/HintergrundImage.png);
+  background-position:center center;
+  background-attachment: fixed;
+  min-height: 100%;
+  color: whitesmoke;
 }
 
 .App-logo {
@@ -35,14 +40,25 @@ button {
   margin: 5px;
 }
 
+
+
 h1,
 h2 {
   margin-top: 20px;
 }
 
+
 .nav a:hover {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);
+}
+html {
+  text-align: center;
+  background: url(image/HintergrundImage.png);
+  background-position:center center;
+  background-attachment: fixed;
+  min-height: 100%;
+  color: whitesmoke;
 }
 
 /* My Cars  + Single Car ********************/
@@ -215,23 +231,30 @@ h2 {
 
 .tableRowName {
   text-align: left;
-  
+  color: whitesmoke;
 }
 
 .tableRowValue {
   border: none;
   outline-style: none;
   text-align: right;
-  
+  background: none;
+  color: whitesmoke;
 }
+
 
 .tableOutline {
   margin-top: 20px;
   width: 400px;
   border: 2px solid;
+  border-color: teal;
   border-radius: 5px;
   padding-bottom: 10px;
   margin-bottom: 20px;
+}
+
+.tableOutline td {
+    border-color: teal;
 }
 
 .carImage {
@@ -248,6 +271,44 @@ h2 {
 
 .car-details-logbook {
   margin-top: 20px;
+}
+
+.logo {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 1em;
+  letter-spacing: 4px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #17a2b8, #fff, #fff );
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: animate 5s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);
+}
+
+@keyframes animate {
+  0% {
+    background-position: -500%;
+  }
+  100% {
+    background-position: 500%;
+  }
+}
+
+#username {
+  background: #343a40;
+  border-color: teal;
+  outline-color: none;
+  color: whitesmoke;
+}
+
+#password {
+  background: #343a40;
+  border-color: teal;
+  outline-color: none;
+  color: whitesmoke;
 }
 
 .fuelSidebarEntry {
@@ -313,3 +374,4 @@ h2 {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #17a2b8; 
+}

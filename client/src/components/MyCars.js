@@ -27,6 +27,7 @@ export default class MyCars extends Component {
   componentDidMount() {
     this.getData();
   }
+  
 
   render() {
     console.log("myCars -----> rendered");
@@ -40,14 +41,11 @@ export default class MyCars extends Component {
           <Link to="/addCar">
             <Button type="submit">Fahrzeug hinzufügen</Button>
           </Link>
-
           <div className="cards-container">
             {this.state.cars.map(car => {
               return (
                 <div key={car._id}>
-                 
                     <Car car={car} />
-                
                 </div>
               );
             })}

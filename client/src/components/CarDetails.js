@@ -260,9 +260,9 @@ export default class CarDetails extends Component {
                     </tbody>
                   </Table>
                   {this.state.editActive &&
-                    <Button type="submit">Änderungen übernehmen</Button>}
+                    <Button variant="info" type="submit">Änderungen übernehmen</Button>}
                   {this.state.editActive &&
-                    <Button type="reset" className="btn btn-default pull-right" onClick = {this.handleCancel}>Abbrechen</Button>}
+                    <Button variant="info" type="reset" className="btn btn-default pull-right" onClick = {this.handleCancel}>Abbrechen</Button>}
                 </form>
               </div>
             </div>
