@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, Table } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class CarDetails extends Component {
   state = {
@@ -12,7 +14,7 @@ export default class CarDetails extends Component {
     leistung_ps: "",
     erstzulassung_monat: "",
     erstzulassung_jahr: "",
-    kaufdatum: "",
+    kaufdatum: this.props.kaufdatum,
     kaufpreis: "",
     kilometerstand_bei_kauf: "",
     kilometerstand: "",
@@ -63,6 +65,12 @@ export default class CarDetails extends Component {
       editActive: !this.state.editActive
     });
   };
+
+  onDateChange = (date) => {
+    this.setState({ 
+      kaufdatum: (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear())
+    })
+  }
 
   handleChange = event => {
     console.log("Inside Car Details Change:", event)
@@ -223,19 +231,20 @@ export default class CarDetails extends Component {
                           className="tableRowValue"
                           type="text"
                           name="kilometerstand"
-                          value={this.state.kilometerstand}
+                          value={this.state.kilometerstand || 0}
                           onChange={this.handleChange}
                         /></td>
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Kaufdatum:</td>
-                        <td><input
-                          className="tableRowValue"
-                          type="text"
-                          name="kaufdatum"
-                          value={this.state.kaufdatum || ""}
-                          onChange={this.handleChange}
-                        /></td>
+                        <td style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                          <DatePicker
+                            className='date_pick_carDetails'
+                            onChange={this.onDateChange}
+                            value={this.state.kaufdatum}
+                            disabled={!this.state.editActive}
+                          />
+                        </td>
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Kaufpreis:</td>
@@ -253,7 +262,7 @@ export default class CarDetails extends Component {
                           className="tableRowValue"
                           type="text"
                           name="kilometerstand_bei_kauf"
-                          value={this.state.kilometerstand_bei_kauf}
+                          value={this.state.kilometerstand_bei_kauf || 0}
                           onChange={this.handleChange}
                         /></td>
                       </tr>

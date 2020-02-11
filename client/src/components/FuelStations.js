@@ -72,6 +72,7 @@ export default class FuelStations extends Component {
       //console.log(response.data);
       //console.log(response.data.stations);
       //console.log(response.data.testMode);
+
       //prepare some of the data
       let prepStations = response.data.stations.map(station => {
         station.street = this.fixCaseOrientation(station.street);
@@ -87,7 +88,13 @@ export default class FuelStations extends Component {
   }
 
   fixCaseOrientation = (inputStr) => {
-    let streetArr = inputStr.split(' ');
+    let newStr = inputStr.split('').map(char => {
+      if (char === '-') {
+        return ' ';
+      }
+      else return char
+    }).join('');    
+    let streetArr = newStr.split(' ');
     let fixedArr = [];
     for (let word of streetArr) {
       let fixedWord = "";
@@ -202,7 +209,7 @@ export default class FuelStations extends Component {
     //console.log(googleMapsMarker);
     let sidebar = (
       <div style={{textAlign: 'left'}}>
-        <div style={{position: 'sticky', top: '0px', backgroundColor: '#343a40', display: 'flex', justifyContent: 'center', zIndex: 1}}>
+        <div style={{position: 'sticky', top: '0px', backgroundColor: '#343a40', display: 'flex', justifyContent: 'center', zIndex: 1, borderTop: '1px solid #17a2b8'}}>
           <div>
             <form onSubmit={this.handleFormSubmit} style={{paddingLeft: '5px', paddingTop: '5px'}}>
               <label htmlFor='zip' style={{color: '#17a2b8', fontWeight: 'bold'}}>Plz:</label>
@@ -225,7 +232,7 @@ export default class FuelStations extends Component {
             </Dropdown>{' '}
           </div>
         </div>
-        <hr style={{marginTop: '3px', marginBottom: '3px', backgroundColor: '#17a2b8'}}/>
+        <hr style={{marginTop: '5px', marginBottom: '3px', backgroundColor: '#17a2b8', height: '1px'}}/>
         {googleMapsMarker.map(oneStation => {
           if (oneStation.brand !== undefined) {
             return <FuelStationsBarEntry key={oneStation.id} {...oneStation} handler={this.handleSidebarEntryClick} />
@@ -243,7 +250,7 @@ export default class FuelStations extends Component {
       <div id="sidebar">
         <Sidebar
           children={mainContent}
-          styles={{root:{top: 40, backgroundColor: '#343a40'}}}
+          styles={{root:{top: 42, backgroundColor: '#343a40'}}}
           sidebar={sidebar}
           open={this.state.sidebarOpen}
           docked={this.state.sidebarDocked}
