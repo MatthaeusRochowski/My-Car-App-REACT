@@ -217,9 +217,8 @@ class AddCar extends Component {
               onChange={this.handleFileSelect}
             />
          {/* </Form.Group>*/}
-         </Form>
-          <Button variant="info" type="submit">Speichern</Button>
-        
+            <Button variant="info" type="submit">Speichern</Button>
+        </Form>
       </div>
       </div>
     );
