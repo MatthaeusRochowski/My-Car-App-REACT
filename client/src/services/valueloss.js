@@ -28,7 +28,9 @@ export const valueLossYear = (car) => {
   //assemble books entry object
   let finalValueLossArr = [];
   for (let j=0; j<determineLossArr.length; j++) {
-    let entry = { rechnungstyp: 'Wertverlust', _id: `valueloss-${heute-j}`, datum: heute-j, kilometerstand: 0, betrag: Math.round(kaufpreis * (determineLossArr[j]/100)) };
+    let year = (heute-j);
+    let datum = `01-01-${year}`;
+    let entry = { rechnungstyp: 'Wertverlust', _id: `valueloss-${heute-j}`, datum: datum, kilometerstand: 0, betrag: Math.round(kaufpreis * (determineLossArr[j]/100)) };
     finalValueLossArr.push(entry);
   }
   console.log(finalValueLossArr);

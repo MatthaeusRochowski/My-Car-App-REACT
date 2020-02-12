@@ -265,7 +265,7 @@ export default class CarDetails extends Component {
                     className="carImage"
                     alt="Autobild"
                   />
-                  <Table responsive="sm">
+                  <Table id="carDetailsTable" responsive="sm">
                     <tbody>
                       <tr className="tableBox">
                         <td className="tableRowName">Kennzeichen:</td>

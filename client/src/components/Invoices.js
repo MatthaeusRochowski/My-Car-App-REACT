@@ -70,9 +70,10 @@ export default class Invoices extends Component {
     //console.log("Invoice -----> Changed State: ", this.state);
     event.preventDefault();
 
+    let mongoInvoice = this.state.invoices.filter(invoice => { return (invoice.rechnungstyp !== 'Wertverlust') });
     axios
       .put(`/api/myCars/invoice/${this.props.carId}`, {
-        invoices: this.state.invoices
+        invoices: mongoInvoice
       })
       .then(response => {
         this.setState({
@@ -111,23 +112,23 @@ export default class Invoices extends Component {
       <div>  
         <h4>Rechnungen</h4>
         {this.state.editActive === false && (
-          <Button onClick={this.toggleEdit}>Rechnung ändern</Button>
+          <Button variant="info" onClick={this.toggleEdit}>Rechnung ändern</Button>
         )}
         {this.state.editActive && (
-          <Button onClick={this.handleSubmit} type="submit">
+          <Button variant="info" onClick={this.handleSubmit} type="submit">
             Speichern
           </Button>
         )}
         {this.state.editActive && (
           <Button
-            type="reset"
+            variant="info"
             className="btn btn-default pull-right"
             onClick={this.handleCancel}
           >
             Abbrechen
           </Button>
         )}
-        <Table striped bordered hover variant="dark">
+        <Table id="invoiceTable" striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>Datum</th>

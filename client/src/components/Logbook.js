@@ -127,7 +127,7 @@ export default class Logbook extends Component {
             Abbrechen
           </Button>
         )}
-        <Table striped bordered hover variant="dark">
+        <Table id="logbookTable" striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>Datum</th>

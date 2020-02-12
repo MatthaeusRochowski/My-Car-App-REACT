@@ -4,6 +4,7 @@ import Chart from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import { Form, Col } from "react-bootstrap";
 import dateOperator from "../services/dateOperator";
+import { valueLossYear } from '../services/valueloss';
 
 const date = new Date();
 
@@ -21,6 +22,11 @@ export default class Invoices extends Component {
       .get(`/api/myCars/${this.props.carId}`)
       .then(response => {
         console.log("Invoices -----> Axios Call ----> Get Data", response);
+        //add value loss to invoice book 
+          let valueLossArr = valueLossYear(response.data);
+          for (let loss of valueLossArr) {
+            response.data.rechnungen.push(loss);
+          }
         this.setState({
           invoices: response.data.rechnungen
         });
@@ -46,8 +52,8 @@ export default class Invoices extends Component {
       .slice()
       .map(invoice => {
         return (
-          dateOperator(invoice.datum).year >= filteredYear &&
-          dateOperator(invoice.datum).month >= filteredMonth &&
+          ((dateOperator(invoice.datum).year === filteredYear &&
+          dateOperator(invoice.datum).month > filteredMonth) || (dateOperator(invoice.datum).year > filteredYear)) &&
           invoice.rechnungstyp === rechnungstyp &&
           invoice.betrag
         );
@@ -90,54 +96,42 @@ export default class Invoices extends Component {
   };
 
   render() {
-    console.log("Report -----> rendered", this.state.chart);
-    console.log("Chart Filtered -----> filter:", this.state.timeFilter);
-    if (this.state.invoices.length > 0) {
-      console.log(
-        "Check dateOperator:",
-        dateOperator(this.state.invoices[0].datum).year
-      );
-    }
+    console.log("Report -----> rendered", this.state.invoices);
 
     let sumTanken = 0;
     let sumVersicherung = 0;
     let sumWerkstatt = 0;
     let sumSteuer = 0;
+    let sumWertverlust = 0;
     let sumKosten = [];
 
     // Kostenauswertung
 
     // Summe aller Kosten nach Rechnungstyp
     if (this.state.invoices.length > 0) {
-      sumTanken = this.aggregateCosts(
-        this.state.invoices,
-        "Tanken",
-        this.state.timeFilter
-      );
-      sumVersicherung = this.aggregateCosts(
-        this.state.invoices,
-        "Versicherung"
-      );
+      sumTanken = this.aggregateCosts(this.state.invoices,"Tanken" );
+      sumVersicherung = this.aggregateCosts(this.state.invoices, "Versicherung");
       sumWerkstatt = this.aggregateCosts(this.state.invoices, "Werkstatt");
       sumSteuer = this.aggregateCosts(this.state.invoices, "Steuer");
+      sumWertverlust = this.aggregateCosts(this.state.invoices, "Wertverlust");
 
       sumKosten = [
         { Tanken: sumTanken },
         { Versicherung: sumVersicherung },
         { Werkstatt: sumWerkstatt },
-        { Steuer: sumSteuer }
+        { Steuer: sumSteuer },
+        { Wertverlust: sumWertverlust}
       ];
     }
 
-    //console.log("aggregierte Kosten:", sumKosten);
-
-    const data = {
-      labels: ["Tanken", "Werkstatt", "Versicherung", "Steuer"],
+    // Daten für Chart
+    const data = { 
+      labels: ["Tanken", "Werkstatt", "Versicherung", "Steuer", "Wertverlust"],
       datasets: [
         {
           label: "Kosten Verteilung",
-          backgroundColor: ["#4682B4", "#B0C4DE", "#ADD8E6", "#87CEFA"],
-          data: [sumTanken, sumWerkstatt, sumVersicherung, sumSteuer]
+          backgroundColor: ["#4682B4", "#B0C4DE", "#ADD8E6", "#87CEFA", "#5F9EA0"],
+          data: [sumTanken, sumWerkstatt, sumVersicherung, sumSteuer, sumWertverlust]
         }
       ],
       options: {
@@ -155,7 +149,8 @@ export default class Invoices extends Component {
             fontSize: 16,
             padding: 15
           }
-        }
+        },
+        responsive: true
       }
     };
 
@@ -199,6 +194,7 @@ export default class Invoices extends Component {
           </Form>
 
           {this.state.chart === "Kosten Verteilung" && (
+            <div id="pieChart">
             <Pie
               width={900}
               height={600}
@@ -206,7 +202,10 @@ export default class Invoices extends Component {
               data={data}
               options={data.options}
               plugins={data.plugins}
+              responsive={true}
+              
             />
+            </div>
           )}
         </div>
       </div>

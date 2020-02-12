@@ -58,10 +58,11 @@ export default class CarView extends Component {
                 </Nav>
               </Card.Header>
             </Card>
+            <div style={{width: '70vw'}}>
             {this.state.view === 'logbook' && <Logbook carId={this.props.match.params.id} />}
             {this.state.view === 'invoices' && <Invoices carId={this.props.match.params.id} restwert={this.state.restwertArr} />}
             {this.state.view === 'report' && <Report carId={this.props.match.params.id} />}
-       
+            </div>
           </div>
         </div>
       </div>
