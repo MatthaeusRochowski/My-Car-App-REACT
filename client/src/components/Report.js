@@ -1,38 +1,20 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Chart from "chart.js";
-import { Bar, defaults } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
+import { Form } from "react-bootstrap";
 
-/* const data = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "My First dataset",
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: "rgba(75,192,192,0.4)",
-      borderColor: "rgba(75,192,192,1)",
-      borderCapStyle: "butt",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      pointBorderColor: "rgba(75,192,192,1)",
-      pointBackgroundColor: "#fff",
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(75,192,192,1)",
-      pointHoverBorderColor: "rgba(220,220,220,1)",
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [65, 59, 80, 81, 56, 55, 40]
-    }
-  ]
-}; */
+const datum = new Date();
+const heute =
+  datum.getFullYear() + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
+const letztesJahr =
+  (datum.getFullYear() - 1) + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
+
 
 export default class Invoices extends Component {
   state = {
-    invoices: []
+    invoices: [],
+    timeFilter: "Kompletter Zeitraum"
   };
 
   getData = () => {
@@ -57,10 +39,11 @@ export default class Invoices extends Component {
     this.getData();
   }
 
-  aggregateCosts = (objArray, rechnungstyp) => {
+  aggregateCosts = (objArray, rechnungstyp, timeFilter) => {
     return objArray
       .slice()
       .map(invoice => {
+        console.log("Inside aggregateCosts -----> Invoice Date:", invoice.datum, "letztesJahr:", letztesJahr)
         return invoice.rechnungstyp === rechnungstyp && invoice.betrag;
       })
       .reduce((acc, curValue) => {
@@ -68,16 +51,28 @@ export default class Invoices extends Component {
       });
   };
 
+  handleTimeFilter = event => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
   render() {
+
+    console.log("Report -----> rendered", this.state.invoices);
+    //console.log("Chart Filtered -----> filter:", this.state.timeFilter )
+    if (this.state.invoices.length > 0) {
+    this.aggregateCosts(this.state.invoices, "Tanken");
+    }
+
     let sumTanken = 0;
     let sumVersicherung = 0;
     let sumWerkstatt = 0;
     let sumSteuer = 0;
     let sumKosten = [];
 
-    console.log("Report -----> rendered", this.state.invoices);
 
-    // Kostenberechnung
+    // Kostenauswertung
 
     // Summe aller Kosten nach Rechnungstyp
     if (this.state.invoices.length > 0) {
@@ -104,55 +99,75 @@ export default class Invoices extends Component {
     );
 
     const data = {
+      labels: ["Tanken", "Werkstatt", "Versicherung", "Steuer"],
       datasets: [
         {
-          label: ["Tanken", "Steuer"],
-          backgroundColor: [
-            "rgba(255, 0, 0, 0.7)",
-          ],
-          data: [sumTanken]
-        },
-        {
-          label: ["Werkstatt"],
-          backgroundColor: [
-            "rgba(0, 255, 0, 0.7)"
-          ],
-          data: [sumWerkstatt]
-        },
-        {
-          label: ["Versicherung"],
-          backgroundColor: [
-            "rgba(0, 0, 255, 0.7)"
-          ],
-          data: [sumVersicherung]
-        }
-        ,
-        {
-          label: ["Steuer"],
-          backgroundColor: [
-            "rgba(255, 0, 120, 0.7)"
-          ],
-          data: [sumSteuer]
+          label: "Kosten Verteilung",
+          backgroundColor: ["#4682B4", "#B0C4DE", "#ADD8E6", "#87CEFA"],
+          data: [sumTanken, sumWerkstatt, sumVersicherung, sumSteuer]
         }
       ],
+      options: {
+        title: {
+          display: true,
+          text: "Kosten Verteilung",
+          fontColor: "white",
+          fontSize: 22
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            // This more specific font property overrides the global property
+            fontColor: "white",
+            fontSize: 16,
+            padding: 15
+          }
+        }
+      },
+      plugins: {
+        datalabels: {
+          formatter: function(value) {
+            return data.labels[data] + "\n" + value + "%";
+          }
+        }
+      }
     };
 
-    const options = {
+    /*     const options = {
       scales: {
-          yAxes: [{
+        yAxes: [
+          {
             ticks: {
               beginAtZero: true
             }
-          }]
+          }
+        ]
       }
-  }
+    }; */
 
     //console.log(betrag);
     return (
       <div>
-        <h4>Kosten Auswertung</h4>
+        <Form>
+          <Form.Control
+            as="select"
+            name="timeFilter"
+            onChange={this.handleTimeFilter}
+          >
+            <option>Kompletter Zeitraum</option>
+            <option>Letztes Jahr</option>
+            <option>Letzte 3 Jahre</option>
+          </Form.Control>
+        </Form>
 
-        <Bar width={900} height={600} ref="chart" data={data} options={options}/>
+        <Pie
+          width={900}
+          height={600}
+          ref="chart"
+          data={data}
+          options={data.options}
+          plugins={data.plugins}
+        />
       </div>
     );
   }
