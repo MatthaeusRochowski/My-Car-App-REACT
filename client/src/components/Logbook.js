@@ -3,8 +3,8 @@ import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Logbook extends Component {
   state = {
@@ -41,6 +41,15 @@ export default class Logbook extends Component {
       
     });
   };
+
+  onDateChange = (date, key) => {
+    const editLog = this.state.logbook.find(
+      log => log._id === key
+    );
+    console.log("Changing Log Entry:", editLog)
+    editLog.datum = (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear());
+    this.forceUpdate();
+  }
 
   handleCancel = event => {
     this.setState(
@@ -143,7 +152,15 @@ export default class Logbook extends Component {
             {this.state.logbook.map(log => {
               return (
                 <tr key={log._id}>
-                  <td><input name="datum" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.datum} /></td>
+                  <td>
+                  {/*<input name="datum" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.datum} />*/}
+                    <DatePicker
+                      className="logTableRowValue"
+                      onChange={date => this.onDateChange(date, log._id)}
+                      value={log.datum}
+                      disabled={!this.state.editActive}
+                    />
+                  </td>
                   <td><input name="startort" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.startort} /></td>
                   <td><input name="zielort" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.zielort} /></td>
                   <td><input name="kilometerstand_start" className="logTableRowValue" onChange={(event) => this.handleChange(event, log._id)} value={log.kilometerstand_start} /></td>
