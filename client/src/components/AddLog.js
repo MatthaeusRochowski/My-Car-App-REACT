@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const datum = new Date();
-const heute =
-  datum.getFullYear() + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
+const heute = datum.getDate() + "-" + (datum.getMonth() + 1) + "-" + datum.getFullYear();
 
 class AddLog extends Component {
   state = {
@@ -41,6 +42,13 @@ class AddLog extends Component {
 
   componentDidMount() {
     this.getData();
+  }
+
+  onDateChange = (date) => {
+    this.setState({ 
+      datum: (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear())
+    })
+    console.log('Picked Datum: ', date);
   }
 
   handleChange = event => {
@@ -82,21 +90,22 @@ class AddLog extends Component {
     //console.log("AddLog Props: ", this.props);
     console.log("AddLog State: ", this.state);
 
-    
-
     return (
       <div>
         <h3>Logbuch Eintrag für {this.state.car_kennzeichen}</h3>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group>
-            <Form.Label htmlFor="datum">Datum: </Form.Label>
-            <Form.Control
-              type="text"
-              name="datum"
-              className="formInput"
-              value={this.state.datum}
-              onChange={this.handleChange}
-            />
+            <Form.Row>
+                <Col>
+                  <Form.Label htmlFor="datum">Datum: </Form.Label><br/>
+                  <DatePicker
+                    id='date_pick_logAdd'
+                    onChange={this.onDateChange}
+                    value={this.state.datum}
+                    disabled={false}
+                  />
+                </Col>      
+              </Form.Row>
             <Form.Label htmlFor="startort">Von: </Form.Label>
             <Form.Control
               type="text"
