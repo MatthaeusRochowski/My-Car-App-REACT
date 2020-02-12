@@ -1,6 +1,128 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Button, Table } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Select from 'react-select';
+ 
+const options = [
+  { value: 'Abarth', label: 'Abarth' },
+  { value: 'AC', label: 'AC' },
+  { value: 'Acura', label: 'Acura' },
+  { value: 'Aixam', label: 'Aixam' },
+  { value: 'Alfa Romeo', label: 'Alfa Romeo' },
+  { value: 'ALPINA', label: 'ALPINA' },
+  { value: 'Artega', label: 'Artega' },
+  { value: 'Asia Motors', label: 'Asia Motors' },
+  { value: 'Aston Martin', label: 'Aston Martin' },
+  { value: 'Audi', label: 'Audi' },
+  { value: 'Austin', label: 'Austin' },
+  { value: 'Austin Healey', label: 'Austin Healey' },
+  { value: 'Bentley', label: 'Bentley' },
+  { value: 'BMW', label: 'BMW' },
+  { value: 'Borgward', label: 'Borgward' },
+  { value: 'Brilliance', label: 'Brilliance' },
+  { value: 'Bugatti', label: 'Bugatti' },
+  { value: 'Buick', label: 'Buick' },
+  { value: 'Cadillac', label: 'Cadillac' },
+  { value: 'Casalini', label: 'Casalini' },
+  { value: 'Caterham', label: 'Caterham' },
+  { value: 'Chatenet', label: 'Chatenet' },
+  { value: 'Chevrolet', label: 'Chevrolet' },
+  { value: 'Chrysler', label: 'Chrysler' },
+  { value: 'Citroën', label: '' },
+  { value: 'Cobra', label: 'Cobra' },
+  { value: 'Corvette', label: 'Corvette' },
+  { value: 'Cupra', label: 'Cupra' },
+  { value: 'Dacia', label: 'Dacia' },
+  { value: 'Daewoo', label: 'Daewoo' },
+  { value: 'Daihatsu', label: 'Daihatsu' },
+  { value: 'DeTomaso', label: 'DeTomaso' },
+  { value: 'Dodge', label: 'Dodge' },
+  { value: 'Donkervoort', label: 'Donkervoort' },
+  { value: 'DS Automobiles', label: 'DS Automobiles' },
+  { value: 'Ferrari', label: 'Ferrari' },
+  { value: 'Fiat', label: 'Fiat' },
+  { value: 'Fisker', label: 'Fisker' },
+  { value: 'Ford', label: 'Ford' },
+  { value: 'GAC Gonow', label: 'GAC Gonow' },
+  { value: 'Gemballa', label: 'Gemballa' },
+  { value: 'GMC', label: 'GMC' },
+  { value: 'Grecav', label: 'Grecav' },
+  { value: 'Hamann', label: 'Hamann' },
+  { value: 'Holden', label: 'Holden' },
+  { value: 'Honda', label: 'Honda' },
+  { value: 'Hummer', label: 'Hummer' },
+  { value: 'Hyundai', label: 'Hyundai' },
+  { value: 'Infiniti', label: 'Infiniti' },
+  { value: 'Isuzu', label: 'Isuzu' },
+  { value: 'Iveco', label: 'Iveco' },
+  { value: 'Jaguar', label: 'Jaguar' },
+  { value: 'Jeep', label: 'Jeep' },
+  { value: 'Kia', label: 'Kia' },
+  { value: 'Koenigsegg', label: 'Koenigsegg' },
+  { value: 'KTM', label: 'KTM' },
+  { value: 'Lada', label: 'Lada' },
+  { value: 'Lamborghini', label: 'Lamborghini' },
+  { value: 'Lancia', label: 'Lancia' },
+  { value: 'Land Rover', label: 'Land Rover' },
+  { value: 'Landwind', label: 'Landwind' },
+  { value: 'Lexus', label: 'Lexus' },
+  { value: 'Ligier', label: 'Ligier' },
+  { value: 'Lincoln', label: 'Lincoln' },
+  { value: 'Lotus', label: 'Lotus' },
+  { value: 'Mahindra', label: 'Mahindra' },
+  { value: 'Maserati', label: 'Maserati' },
+  { value: 'Maybach', label: 'Maybach' },
+  { value: 'Mazda', label: 'Mazda' },
+  { value: 'McLaren', label: 'McLaren' },
+  { value: 'Mercedes-Benz', label: '' },
+  { value: 'MG', label: 'MG' },
+  { value: 'Microcar', label: 'Microcar' },
+  { value: 'MINI', label: 'MINI' },
+  { value: 'Mitsubishi', label: 'Mitsubishi' },
+  { value: 'Morgan', label: 'Morgan' },
+  { value: 'Nissan', label: 'Nissan' },
+  { value: 'NSU', label: 'NSU' },
+  { value: 'Oldsmobile', label: 'Oldsmobile' },
+  { value: 'Opel', label: 'Opel' },
+  { value: 'Pagani', label: 'Pagani' },
+  { value: 'Peugeot', label: 'Peugeot' },
+  { value: 'Piaggio', label: 'Piaggio' },
+  { value: 'Plymouth', label: 'Plymouth' },
+  { value: 'Polestar', label: 'Polestar' },
+  { value: 'Pontiac', label: 'Pontiac' },
+  { value: 'Porsche', label: 'Porsche' },
+  { value: 'Proton', label: 'Proton' },
+  { value: 'Renault', label: 'Renault' },
+  { value: 'Rolls-Royce', label: '' },
+  { value: 'Rover', label: 'Rover' },
+  { value: 'Ruf', label: 'Ruf' },
+  { value: 'Saab', label: 'Saab' },
+  { value: 'Santana', label: 'Santana' },
+  { value: 'Seat', label: 'Seat' },
+  { value: 'Skoda', label: 'Skoda' },
+  { value: 'Smart', label: 'Smart' },
+  { value: 'speedART', label: 'speedART' },
+  { value: 'Spyker', label: 'Spyker' },
+  { value: 'Ssangyong', label: 'Ssangyong' },
+  { value: 'Subaru', label: 'Subaru' },
+  { value: 'Suzuki', label: 'Suzuki' },
+  { value: 'Talbot', label: 'Talbot' },
+  { value: 'Tata', label: 'Tata' },
+  { value: 'TECHART', label: 'TECHART' },
+  { value: 'Tesla', label: 'Tesla' },
+  { value: 'Toyota', label: 'Toyota' },
+  { value: 'Trabant', label: 'Trabant' },
+  { value: 'Triumph', label: 'Triumph' },
+  { value: 'TVR', label: 'TVR' },
+  { value: 'Volkswagen', label: 'Volkswagen' },
+  { value: 'Volvo', label: 'Volvo' },
+  { value: 'Wartburg', label: 'Wartburg' },
+  { value: 'Westfield', label: 'Westfield' },
+  { value: 'Wiesmann', label: 'Wiesmann' },
+  { value: 'Andere', label: 'Andere' },
+];
 
 export default class CarDetails extends Component {
   state = {
@@ -12,7 +134,7 @@ export default class CarDetails extends Component {
     leistung_ps: "",
     erstzulassung_monat: "",
     erstzulassung_jahr: "",
-    kaufdatum: "",
+    kaufdatum: this.props.kaufdatum,
     kaufpreis: "",
     kilometerstand_bei_kauf: "",
     kilometerstand: "",
@@ -63,6 +185,18 @@ export default class CarDetails extends Component {
       editActive: !this.state.editActive
     });
   };
+
+  onHerstellerChange = (selectedHersteller) => {
+    this.setState({ hersteller: selectedHersteller });
+    console.log('Selected Hersteller: ', selectedHersteller);
+  };
+
+  onKaufdatumChange = (date) => {
+    this.setState({ 
+      kaufdatum: (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear())
+    })
+    console.log('Picked Kaufdatum: ', date);
+  }
 
   handleChange = event => {
     console.log("Inside Car Details Change:", event)
@@ -145,13 +279,17 @@ export default class CarDetails extends Component {
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Hersteller:</td>
-                        <td><input
-                          className="tableRowValue"
-                          type="text"
-                          name="hersteller"
-                          value={this.state.hersteller}
-                          onChange={this.handleChange}
-                        /></td>
+                        <td id='selectHersteller'>
+                          <Select
+                            name='hersteller'
+                            value={this.state.hersteller}
+                            onChange={this.onHerstellerChange}
+                            options={options}
+                            isDisabled={!this.state.editActive}
+                            isSearchable={true}
+                            isRtl={true}
+                          />
+                        </td>
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Modell:</td>
@@ -223,19 +361,20 @@ export default class CarDetails extends Component {
                           className="tableRowValue"
                           type="text"
                           name="kilometerstand"
-                          value={this.state.kilometerstand}
+                          value={this.state.kilometerstand || 0}
                           onChange={this.handleChange}
                         /></td>
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Kaufdatum:</td>
-                        <td><input
-                          className="tableRowValue"
-                          type="text"
-                          name="kaufdatum"
-                          value={this.state.kaufdatum || ""}
-                          onChange={this.handleChange}
-                        /></td>
+                        <td style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                          <DatePicker
+                            className='date_pick_carDetails'
+                            onChange={this.onKaufdatumChange}
+                            value={this.state.kaufdatum}
+                            disabled={!this.state.editActive}
+                          />
+                        </td>
                       </tr>
                       <tr className="tableBox">
                         <td className="tableRowName">Kaufpreis:</td>
@@ -253,7 +392,7 @@ export default class CarDetails extends Component {
                           className="tableRowValue"
                           type="text"
                           name="kilometerstand_bei_kauf"
-                          value={this.state.kilometerstand_bei_kauf}
+                          value={this.state.kilometerstand_bei_kauf || 0}
                           onChange={this.handleChange}
                         /></td>
                       </tr>
