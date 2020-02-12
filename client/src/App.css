@@ -484,3 +484,13 @@ input:-webkit-autofill {
   background: white;
   margin-top: 1px;
 }
+
+.chartFilter {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.chartSelectBox {
+  width: 300px
+}

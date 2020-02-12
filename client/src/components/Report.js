@@ -2,19 +2,18 @@ import React, { Component } from "react";
 import axios from "axios";
 import Chart from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
-import { Form } from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
+import dateOperator from "../services/dateOperator";
 
-const datum = new Date();
-const heute =
-  datum.getFullYear() + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
-const letztesJahr =
-  (datum.getFullYear() - 1) + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
-
+const date = new Date();
 
 export default class Invoices extends Component {
   state = {
     invoices: [],
-    timeFilter: "Kompletter Zeitraum"
+    chart: "Kosten Verteilung",
+    timeFilter: "Seit Kaufdatum",
+    filteredYear: 0,
+    filteredMonth: 0
   };
 
   getData = () => {
@@ -39,12 +38,19 @@ export default class Invoices extends Component {
     this.getData();
   }
 
-  aggregateCosts = (objArray, rechnungstyp, timeFilter) => {
+  aggregateCosts = (objArray, rechnungstyp) => {
+    const filteredYear = this.state.filteredYear;
+    const filteredMonth = this.state.filteredMonth;
+
     return objArray
       .slice()
       .map(invoice => {
-        console.log("Inside aggregateCosts -----> Invoice Date:", invoice.datum, "letztesJahr:", letztesJahr)
-        return invoice.rechnungstyp === rechnungstyp && invoice.betrag;
+        return (
+          dateOperator(invoice.datum).year >= filteredYear &&
+          dateOperator(invoice.datum).month >= filteredMonth &&
+          invoice.rechnungstyp === rechnungstyp &&
+          invoice.betrag
+        );
       })
       .reduce((acc, curValue) => {
         return (acc += curValue);
@@ -52,17 +58,45 @@ export default class Invoices extends Component {
   };
 
   handleTimeFilter = event => {
+    switch (event.target.value) {
+      case "Seit Kaufdatum":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: 0,
+          filteredMonth: 0
+        });
+        break;
+      case "Letztes Jahr":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: parseInt(date.getFullYear() - 1),
+          filteredMonth: parseInt(date.getMonth() + 1)
+        });
+        break;
+      case "Letzte 3 Jahre":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: parseInt(date.getFullYear() - 3),
+          filteredMonth: parseInt(date.getMonth() + 1)
+        });
+        break;
+    }
+  };
+
+  selectChart = event => {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
   };
 
   render() {
-
-    console.log("Report -----> rendered", this.state.invoices);
-    //console.log("Chart Filtered -----> filter:", this.state.timeFilter )
+    console.log("Report -----> rendered", this.state.chart);
+    console.log("Chart Filtered -----> filter:", this.state.timeFilter);
     if (this.state.invoices.length > 0) {
-    this.aggregateCosts(this.state.invoices, "Tanken");
+      console.log(
+        "Check dateOperator:",
+        dateOperator(this.state.invoices[0].datum).year
+      );
     }
 
     let sumTanken = 0;
@@ -71,12 +105,15 @@ export default class Invoices extends Component {
     let sumSteuer = 0;
     let sumKosten = [];
 
-
     // Kostenauswertung
 
     // Summe aller Kosten nach Rechnungstyp
     if (this.state.invoices.length > 0) {
-      sumTanken = this.aggregateCosts(this.state.invoices, "Tanken");
+      sumTanken = this.aggregateCosts(
+        this.state.invoices,
+        "Tanken",
+        this.state.timeFilter
+      );
       sumVersicherung = this.aggregateCosts(
         this.state.invoices,
         "Versicherung"
@@ -92,11 +129,7 @@ export default class Invoices extends Component {
       ];
     }
 
-    console.log("aggregierte Kosten:", sumKosten);
-    console.log(
-      "Kosten Object Keys:",
-      sumKosten.map(element => Object.keys(element))
-    );
+    //console.log("aggregierte Kosten:", sumKosten);
 
     const data = {
       labels: ["Tanken", "Werkstatt", "Versicherung", "Steuer"],
@@ -110,7 +143,7 @@ export default class Invoices extends Component {
       options: {
         title: {
           display: true,
-          text: "Kosten Verteilung",
+          text: "Kosten Verteilung: " + [this.state.timeFilter],
           fontColor: "white",
           fontSize: 22
         },
@@ -121,13 +154,6 @@ export default class Invoices extends Component {
             fontColor: "white",
             fontSize: 16,
             padding: 15
-          }
-        }
-      },
-      plugins: {
-        datalabels: {
-          formatter: function(value) {
-            return data.labels[data] + "\n" + value + "%";
           }
         }
       }
@@ -148,26 +174,41 @@ export default class Invoices extends Component {
     //console.log(betrag);
     return (
       <div>
-        <Form>
-          <Form.Control
-            as="select"
-            name="timeFilter"
-            onChange={this.handleTimeFilter}
-          >
-            <option>Kompletter Zeitraum</option>
-            <option>Letztes Jahr</option>
-            <option>Letzte 3 Jahre</option>
-          </Form.Control>
-        </Form>
+        <div>
+          <Form className="chartFilter">
+            <Form.Control
+              className="chartSelectBox"
+              as="select"
+              name="chart"
+              onChange={this.selectChart}
+            >
+              <option>Kosten Verteilung</option>
+              <option>Kilometer Kosten</option>
+            </Form.Control>
 
-        <Pie
-          width={900}
-          height={600}
-          ref="chart"
-          data={data}
-          options={data.options}
-          plugins={data.plugins}
-        />
+            <Form.Control
+              className="chartSelectBox"
+              as="select"
+              name="timeFilter"
+              onChange={this.handleTimeFilter}
+            >
+              <option>Seit Kaufdatum</option>
+              <option>Letztes Jahr</option>
+              <option>Letzte 3 Jahre</option>
+            </Form.Control>
+          </Form>
+
+          {this.state.chart === "Kosten Verteilung" && (
+            <Pie
+              width={900}
+              height={600}
+              ref="chart"
+              data={data}
+              options={data.options}
+              plugins={data.plugins}
+            />
+          )}
+        </div>
       </div>
     );
   }
