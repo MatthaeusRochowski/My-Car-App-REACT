@@ -16,6 +16,7 @@
     "react-materialize": "^3.5.9",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.1",
+    "react-select": "^3.0.8",
     "react-sidebar": "^3.0.2"
   },
   "scripts": {
