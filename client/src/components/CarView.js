@@ -9,7 +9,7 @@ import { Card, Nav, Button } from "react-bootstrap";
 
 export default class CarView extends Component {
   state = {
-    view: 'logbook'
+    view: 'logbook',
   }
 
   deleteCar = () => {
@@ -39,9 +39,7 @@ export default class CarView extends Component {
     console.log("CarView ----> props: ", this.props);
     return (
       <div>
-        <h2>Fahrzeug Details</h2>
-       
-        
+        <h2>Fahrzeug Details</h2>        
         <div className="overview">
           <CarDetails carId={this.props.match.params.id} deleteHandler={this.deleteCar} />
           <div className="car-details-logbook">
@@ -61,7 +59,7 @@ export default class CarView extends Component {
               </Card.Header>
             </Card>
             {this.state.view === 'logbook' && <Logbook carId={this.props.match.params.id} />}
-            {this.state.view === 'invoices' && <Invoices carId={this.props.match.params.id} />}
+            {this.state.view === 'invoices' && <Invoices carId={this.props.match.params.id} restwert={this.state.restwertArr} />}
             {this.state.view === 'report' && <Report carId={this.props.match.params.id} />}
        
           </div>

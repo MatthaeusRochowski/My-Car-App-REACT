@@ -3,6 +3,7 @@ import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { valueLossYear } from '../services/valueloss';
 
 export default class Invoices extends Component {
   state = {
@@ -14,7 +15,12 @@ export default class Invoices extends Component {
     axios
       .get(`/api/myCars/${this.props.carId}`)
       .then(response => {
-        console.log("Invoices -----> Axios Call ----> Get Data", response);
+        console.log("Invoices -----> Axios Call ----> Get Data: ", response);
+        //add value loss to invoice book
+        let valueLossArr = valueLossYear(response.data);
+        for (let loss of valueLossArr) {
+          response.data.rechnungen.push(loss);
+        }
         this.setState({
           invoices: response.data.rechnungen
         });
@@ -102,7 +108,7 @@ export default class Invoices extends Component {
     console.log("Invoice -----> rendered", this.state.invoices);
 
     return (
-      <div>
+      <div>  
         <h4>Rechnungen</h4>
         {this.state.editActive === false && (
           <Button onClick={this.toggleEdit}>Rechnung ändern</Button>
