@@ -118,7 +118,7 @@ class AddInvoice extends Component {
             />
           </Form.Group>
 
-          <Button type="submit">Speichern</Button>
+          <Button variant="info" type="submit">Speichern</Button>
         </Form>
       </div>
     );

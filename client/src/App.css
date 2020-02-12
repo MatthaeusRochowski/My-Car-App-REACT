@@ -1,7 +1,8 @@
 .App {
   text-align: center;
-  background: url(image/HintergrundImage.png);
+  background-color: #495057;
   background-position:center center;
+  background-size: cover;
   background-attachment: fixed;
   min-height: 100%;
   color: whitesmoke;
@@ -36,8 +37,12 @@ button {
 }
 
 .nav a {
-  color: white;
+  color:  #17a2b8;
   margin: 5px;
+  text-transform: uppercase;
+  margin-right: 30px;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 
@@ -54,7 +59,8 @@ h2 {
 }
 html {
   text-align: center;
-  background: url(image/HintergrundImage.png);
+  background-color: #495057;
+  background-size: cover;
   background-position:center center;
   background-attachment: fixed;
   min-height: 100%;
@@ -92,7 +98,7 @@ html {
 .car-partial{
   border-radius: 5px;
   border: 2px solid;
-  border-color: #494949;
+  border-color: #17a2b8;
   margin-top: 30px;
   margin-left: 10px;
   margin-right: 10px;
@@ -247,14 +253,14 @@ html {
   margin-top: 20px;
   width: 400px;
   border: 2px solid;
-  border-color: teal;
+  border-color:  #17a2b8;
   border-radius: 5px;
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
 
 .tableOutline td {
-    border-color: teal;
+    border-color:  #17a2b8;
 }
 
 .carImage {
@@ -296,17 +302,17 @@ html {
     background-position: 500%;
   }
 }
-
+/* LOGIN SIGNUP */
 #username {
   background: #343a40;
-  border-color: teal;
+  border-color:  #17a2b8;
   outline-color: none;
   color: whitesmoke;
 }
 
 #password {
   background: #343a40;
-  border-color: teal;
+  border-color:  #17a2b8;
   outline-color: none;
   color: whitesmoke;
 }
@@ -376,6 +382,91 @@ html {
   background: #17a2b8; 
 }
 
+/* STARTPAGE */
+.startPage {
+  margin-left: 50px;
+  text-transform: uppercase;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-top: 100px;
+}
+
+.startText {
+  float: left;
+}
+.startPage p {
+  float: left;
+  font-weight: bold;
+  margin-top: 5px;
+}
+.startPage h1 {
+  float: left;
+  font-weight: bold;
+}
+.startPage h4 {
+  float: left;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.startBild {
+  float: right;
+  margin-top: 300px;
+  margin-right: 50px;
+}
+
+.startImage {
+  width: 800px;
+  height: auto;
+  border-radius: 80px;
+}
+
+/* ADD CAR PAGE */
+.addFormInput {
+  margin-top: 50px;
+  width: 600px;  
+
+}
+
+.formInput {
+  margin-bottom: 30px;
+  background-color: #343a40 !important;
+  border-color:  #17a2b8;
+  outline-color: none;
+  color: #17a2b8;
+  font-weight: bold;
+}
+
+.carAddPage {
+  margin-top: 20px;
+  float: left;
+}
+
+#iconTrash {
+  cursor: pointer;
+}
+
+#iconTrash:hover {
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+}
+
+/* Change the white to any color ;) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px #343a40 inset !important;
+}
+
+/*Change text in autofill textbox*/
+input:-webkit-autofill {
+  -webkit-text-fill-color: #17a2b8 !important;
+}
+
+.button {
+  margin-bottom: 10px;
+}
+
 .date_pick_carDetails {
   border: 0px;
   text-align: center;
@@ -393,5 +484,3 @@ html {
   background: white;
   margin-top: 1px;
 }
-
-

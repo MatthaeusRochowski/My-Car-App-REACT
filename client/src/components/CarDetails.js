@@ -254,7 +254,7 @@ export default class CarDetails extends Component {
       <div>
         <div className="car-details">
           <div className="car-details-form">
-            <Button onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
+            <Button variant="info" onClick={this.toggleEdit}>Fahrzeugdaten ändern</Button>
             <Button variant="danger" onClick={this.props.deleteHandler}>Fahrzeug löschen</Button>
 
             <div className="overview">

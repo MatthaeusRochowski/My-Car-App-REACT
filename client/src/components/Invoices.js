@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Table, Button } from "react-bootstrap";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default class Invoices extends Component {
   state = {
@@ -150,20 +152,20 @@ export default class Invoices extends Component {
                     />
                   </td>
                   <td>
-                  {this.state.editActive === false && invoice.rechnungstyp}
-                  {this.state.editActive &&
-                    <select
-                      name="rechnungstyp"
-                      className="logTableRowValue"
-                      onChange={event => this.handleChange(event, invoice._id)}
-                    >
-                      <option value={invoice.rechnungstyp} selected>{invoice.rechnungstyp}</option>
-                      <option value="Tanken">Tanken</option>
-                      <option value="Werkstatt">Werkstatt</option>
-                      <option value="Versicherung">Versicherung</option>
-                      <option value="Steuer">Steuer</option>
-                      <option value="Wertverlust">Wertverlust</option>
-                    </select>}
+                    {this.state.editActive === false && invoice.rechnungstyp}
+                    {this.state.editActive &&
+                      <select
+                        name="rechnungstyp"
+                        className="logTableRowValue"
+                        onChange={event => this.handleChange(event, invoice._id)}
+                      >
+                        <option value={invoice.rechnungstyp} selected>{invoice.rechnungstyp}</option>
+                        <option value="Tanken">Tanken</option>
+                        <option value="Werkstatt">Werkstatt</option>
+                        <option value="Versicherung">Versicherung</option>
+                        <option value="Steuer">Steuer</option>
+                        <option value="Wertverlust">Wertverlust</option>
+                      </select>}
                   </td>
                   <td>
                     <input
@@ -174,14 +176,13 @@ export default class Invoices extends Component {
                     />
                   </td>
                   <td>
-                    {this.state.editActive && (
-                      <Button
+                    {this.state.editActive &&
+                      <FontAwesomeIcon
                         variant="danger"
+                        id="iconTrash"
                         onClick={() => this.deleteInvoice(invoice._id)}
-                      >
-                        löschen
-                      </Button>
-                    )}
+                        icon={faTrash}
+                      />}
                   </td>
                 </tr>
               );
