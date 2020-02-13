@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
   const zipCode = req.query.zip;
   const geoUrl = "https://geocode.xyz/" + zipCode + "+DE?json=1";
 
-  let testMode = true;
+  let testMode = false;
   if (!testMode) { 
     console.log("FuelStations: geocode call - before call is sent");
     axios.get(geoUrl)

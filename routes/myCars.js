@@ -53,6 +53,7 @@ router.post("/", (req, res) => {
   console.log("inside post route", req.body);
 
   var car = new Car({
+    eigner_ref: req.body.car.eigner_ref,
     kennzeichen: req.body.car.kennzeichen,
     hersteller: req.body.car.hersteller,
     modell: req.body.car.modell,
