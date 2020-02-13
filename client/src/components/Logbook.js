@@ -136,16 +136,17 @@ export default class Logbook extends Component {
             Abbrechen
           </Button>
         )}
-        <Table id="logbookTable" striped bordered hover variant="dark">
+        <div className='scrollTable'>
+          <Table id="logbookTable" striped bordered hover variant="dark" noDataIndication="X" keyField='id'>
           <thead>
             <tr>
-              <th>Datum</th>
-              <th>Startort</th>
-              <th>Zielort</th>
-              <th>Km Start</th>
-              <th>Km Ende</th>
-              <th>Strecke Gesamt</th>
-              <th>Eintrag löschen</th>
+              <th className='stickyTableHeader'>Datum</th>
+              <th className='stickyTableHeader'>Startort</th>
+              <th className='stickyTableHeader'>Zielort</th>
+              <th className='stickyTableHeader'>Km Start</th>
+              <th className='stickyTableHeader'>Km Ende</th>
+              <th className='stickyTableHeader'>Strecke Gesamt</th>
+              <th className='stickyTableHeader'>Eintrag löschen</th>
             </tr>
           </thead>
           <tbody>
@@ -179,6 +180,7 @@ export default class Logbook extends Component {
             })}
           </tbody>
         </Table>
+        </div>
       </div>
     );
   }

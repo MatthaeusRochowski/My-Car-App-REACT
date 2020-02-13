@@ -1,10 +1,10 @@
 .App {
   text-align: center;
   background-color: #495057;
-  background-position:center center;
+  background-position: center center;
   background-size: cover;
   background-attachment: fixed;
-  min-height: 100%;
+  height: 100vh;
   color: whitesmoke;
 }
 
@@ -36,8 +36,12 @@ button {
   margin: 1px;
 }
 
+.nav {
+  height: 5vh;
+}
+
 .nav a {
-  color:  #17a2b8;
+  color: #17a2b8;
   margin: 5px;
   text-transform: uppercase;
   margin-right: 30px;
@@ -45,23 +49,21 @@ button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
-
 h1,
 h2 {
   margin-top: 20px;
 }
 
-
 .nav a:hover {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);
 }
+
 html {
   text-align: center;
   background-color: #495057;
   background-size: cover;
-  background-position:center center;
+  background-position: center center;
   background-attachment: fixed;
   min-height: 100%;
   color: whitesmoke;
@@ -73,7 +75,7 @@ html {
   float: right;
   margin-right: 10px;
   margin-top: 70px;
-  background-color: #2F4F4F;
+  background-color: #2f4f4f;
   color: whitesmoke;
   border-radius: 5px;
   border: 2px solid;
@@ -95,7 +97,7 @@ html {
   justify-content: space-evenly;
 }
 
-.car-partial{
+.car-partial {
   border-radius: 5px;
   border: 2px solid;
   border-color: #17a2b8;
@@ -115,7 +117,7 @@ html {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
 }
 
-.p-class{
+.p-class {
   display: flex;
   justify-content: space-between;
   width: 310px;
@@ -139,7 +141,7 @@ html {
   margin-top: 2px;
   margin-right: 50px;
   margin-left: 50px;
-  background-color: #2F4F4F;
+  background-color: #2f4f4f;
   color: whitesmoke;
   border-radius: 5px;
   border: 2px solid;
@@ -168,7 +170,6 @@ html {
   float: right;
   margin-right: 10px;
 }
-
 
 #form-add-car input {
   height: 30px;
@@ -219,7 +220,7 @@ html {
   float: left;
   margin-left: 10px;
   margin-top: 20px;
-  background-color: #2F4F4F;
+  background-color: #2f4f4f;
   color: whitesmoke;
   border-radius: 5px;
   border: 2px solid;
@@ -248,19 +249,18 @@ html {
   color: whitesmoke;
 }
 
-
 .tableOutline {
   margin-top: 20px;
   width: 400px;
   border: 2px solid;
-  border-color:  #17a2b8;
+  border-color: #17a2b8;
   border-radius: 5px;
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
 
 .tableOutline td {
-    border-color:  #17a2b8;
+  border-color: #17a2b8;
 }
 
 .carImage {
@@ -275,10 +275,6 @@ html {
   justify-content: space-evenly;
 }
 
-.car-details-logbook {
-  margin-top: 20px;
-}
-
 .logo {
   position: relative;
   font-family: sans-serif;
@@ -286,7 +282,7 @@ html {
   font-size: 1em;
   letter-spacing: 4px;
   overflow: hidden;
-  background: linear-gradient(90deg, #17a2b8, #fff, #fff );
+  background: linear-gradient(90deg, #17a2b8, #fff, #fff);
   background-repeat: no-repeat;
   background-size: 80%;
   animation: animate 5s linear infinite;
@@ -305,14 +301,14 @@ html {
 /* LOGIN SIGNUP */
 #username {
   background: #343a40;
-  border-color:  #17a2b8;
+  border-color: #17a2b8;
   outline-color: none;
   color: whitesmoke;
 }
 
 #password {
   background: #343a40;
-  border-color:  #17a2b8;
+  border-color: #17a2b8;
   outline-color: none;
   color: whitesmoke;
 }
@@ -322,30 +318,25 @@ html {
   padding-left: 20px;
 }
 
-.logTableRowValue {
-  border: none;
-  outline-style: none;
-  text-align: right;
-  background: none;
-  color: whitesmoke;
-}
-
 .logTableRowValue option {
-  color: black
+  color: black;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #17a2b8;
-  opacity: 1;   /* Firefox */
+  opacity: 1; /* Firefox */
   font-weight: 100;
   text-align: left;
 }
 
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
   color: #17a2b8;
 }
 
-::-ms-input-placeholder { /* Microsoft Edge */
+::-ms-input-placeholder {
+  /* Microsoft Edge */
   color: #17a2b8;
 }
 
@@ -366,20 +357,20 @@ html {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 10px #868e96; 
+  box-shadow: inset 0 0 10px #868e96;
   border-radius: 2px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #343a40; 
+  background: #343a40;
   border: 1px solid #17a2b8;
   border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #17a2b8; 
+  background: #17a2b8;
 }
 
 /* STARTPAGE */
@@ -388,6 +379,9 @@ html {
   text-transform: uppercase;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-top: 100px;
+  background-color: tomato;
+  height: 100%;
+  width: 100%;
 }
 
 .startText {
@@ -415,14 +409,13 @@ html {
 }
 
 .startImage {
-  background-size: 100% 100%
+  background-size: 100% 100%;
 }
 
 /* ADD CAR PAGE */
 .addFormInput {
   margin-top: 50px;
-  width: 600px;  
-
+  width: 600px;
 }
 
 .formInput {
@@ -450,10 +443,10 @@ html {
 
 /* Change the white to any color ;) */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
-    -webkit-box-shadow: 0 0 0 30px #343a40 inset !important;
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #343a40 inset !important;
 }
 
 /*Change text in autofill textbox*/
@@ -490,11 +483,10 @@ input:-webkit-autofill {
 }
 
 .chartSelectBox {
-  width: 300px
+  width: 300px;
 }
 
 #invoiceTable thead th {
-  width: 20%;
   text-align: center;
 }
 
@@ -503,7 +495,6 @@ input:-webkit-autofill {
 }
 
 #logbookTable thead th {
-  width: 20%;
   text-align: center;
 }
 
@@ -516,8 +507,8 @@ input:-webkit-autofill {
   margin: 2vw 10vw;
 }
 
-#carDetailsTable tbody>tr>td {
-  padding: 0.3vw
+#carDetailsTable tbody > tr > td {
+  padding: 0.3vw;
 }
 
 #date_pick_carAdd {
@@ -565,4 +556,53 @@ input:-webkit-autofill {
   border-color: #17a2b8;
   border-radius: 0.25rem;
   font-weight: bold;
+}
+
+.reportFrame {
+  width: "20vw";
+}
+
+.scrollTable {
+  height: 408px;
+  overflow-y: auto; /* Trigger vertical scroll    */
+  overflow-x: auto; /* Hide the horizontal scroll */
+}
+
+.logTableRowValue {
+  border: none;
+  outline-style: none;
+  text-align: right;
+  background: none;
+  color: whitesmoke;
+  text-align: center;
+  width: 100%;
+}
+.stickyTableHeader {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  background-color: #343a40;
+  border-top: 0px !important;
+  border-bottom: 0px !important;
+}
+#invoiceTable {
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+#logbookTable {
+  width: 100%;
+}
+
+#landingText {
+
+  position: absolute;
+  top: 38vh;
+  left: 15vw;
+  height: 20vh;
+  width: 40vw;
+  text-align: start;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 170%;
+  line-height: 1.5;
 }

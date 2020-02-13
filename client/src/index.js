@@ -7,11 +7,13 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import './App.css';
+import Startpage from "./components/Startpage";
 
 axios.get("/api/auth/loggedin").then(response => {
   const user = response.data;
 
   ReactDOM.render(
+    
     <BrowserRouter>
       <App user={user} />
     </BrowserRouter>,
