@@ -15,8 +15,13 @@ export default class MyCars extends Component {
     axios
       .get("/api/myCars")
       .then(response => {
+        let filteredResponse = response.data.filter(car => {
+          if (car.eigner_ref._id === this.props.user._id) {
+            return car;
+          }
+        })
         this.setState({
-          cars: response.data
+          cars: filteredResponse
         });
       })
       .catch(err => {
