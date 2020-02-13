@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const datum = new Date();
-const heute =
-  datum.getFullYear() + "-" + (datum.getMonth() + 1) + "-" + datum.getDate();
+const heute = datum.getDate() + "-" + (datum.getMonth() + 1) + "-" + datum.getFullYear();
 
 class AddInvoice extends Component {
   state = {
@@ -40,6 +41,13 @@ class AddInvoice extends Component {
 
   componentDidMount() {
     this.getData();
+  }
+
+  onDateChange = (date) => {
+    this.setState({ 
+      datum: (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear())
+    })
+    console.log('Picked Datum: ', date);
   }
 
   handleChange = event => {
@@ -83,14 +91,17 @@ class AddInvoice extends Component {
         <h3>Neue Rechnung für {this.state.car_kennzeichen}</h3>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group>
-            <Form.Label htmlFor="datum">Datum: </Form.Label>
-            <Form.Control
-              type="text"
-              name="datum"
-              id="datum"
-              value={this.state.datum}
-              onChange={this.handleChange}
-            />
+            <Form.Row>
+              <Col>
+                <Form.Label htmlFor="datum">Datum: </Form.Label>
+                <DatePicker
+                  id='date_pick_invoiceAdd'
+                  onChange={this.onDateChange}
+                  value={this.state.datum}
+                  disabled={false}
+                />
+              </Col>      
+            </Form.Row>
             <Form.Label htmlFor="kilometerstand">Kilometerstand: </Form.Label>
             <Form.Control
               type="text"

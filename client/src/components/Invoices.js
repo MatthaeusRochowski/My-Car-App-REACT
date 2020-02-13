@@ -4,6 +4,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { valueLossYear } from '../services/valueloss';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Invoices extends Component {
   state = {
@@ -36,6 +38,15 @@ export default class Invoices extends Component {
 
   componentDidMount() {
     this.getData();
+  }
+
+  onDateChange = (date, key) => {
+    const editInvoice = this.state.invoices.find(
+      invoice => invoice._id === key
+    );
+    console.log("Changing Invoice:", editInvoice);
+    editInvoice.datum = (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear());
+    this.forceUpdate();
   }
 
   toggleEdit = () => {
@@ -143,11 +154,11 @@ export default class Invoices extends Component {
               return (
                 <tr key={invoice._id}>
                   <td>
-                    <input
-                      name="datum"
+                    <DatePicker
                       className="logTableRowValue"
-                      onChange={event => this.handleChange(event, invoice._id)}
+                      onChange={date => this.onDateChange(date, invoice._id)}
                       value={invoice.datum}
+                      disabled={!this.state.editActive}
                     />
                   </td>
                   <td>
@@ -166,7 +177,7 @@ export default class Invoices extends Component {
                         className="logTableRowValue"
                         onChange={event => this.handleChange(event, invoice._id)}
                       >
-                        <option value={invoice.rechnungstyp} selected>{invoice.rechnungstyp}</option>
+                        <option value={invoice.rechnungstyp || 0} selected>{invoice.rechnungstyp}</option>
                         <option value="Tanken">Tanken</option>
                         <option value="Werkstatt">Werkstatt</option>
                         <option value="Versicherung">Versicherung</option>
@@ -179,7 +190,7 @@ export default class Invoices extends Component {
                       name="betrag"
                       className="logTableRowValue"
                       onChange={event => this.handleChange(event, invoice._id)}
-                      value={invoice.betrag}
+                      value={invoice.betrag || 0}
                     />
                   </td>
                   <td>

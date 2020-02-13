@@ -428,9 +428,9 @@ html {
 .formInput {
   margin-bottom: 30px;
   background-color: #343a40 !important;
-  border-color:  #17a2b8;
+  border-color: #17a2b8;
   outline-color: none;
-  color: #17a2b8;
+  color: #17a2b8 !important;
   font-weight: bold;
 }
 
@@ -520,3 +520,49 @@ input:-webkit-autofill {
   padding: 0.3vw
 }
 
+#date_pick_carAdd {
+  margin-bottom: 30px;
+  background-color: #343a40 !important;
+  border: 1px solid #17a2b8;
+  border-radius: 0.25rem;
+  color: #17a2b8;
+  font-weight: bold;
+  height: 2.3rem;
+  text-align: center;
+}
+
+#date_pick_invoiceAdd {
+  width: 50vw;
+  border-radius: 0.25rem;
+  height: 2.3rem;
+  padding-left: 10px;
+}
+
+#date_pick_logAdd {
+  margin-bottom: 30px;
+  background-color: #343a40 !important;
+  border: 1px solid #17a2b8;
+  border-radius: 0.25rem;
+  color: #17a2b8;
+  font-weight: bold;
+  height: 2.3rem;
+  text-align: start;
+  width: 50vw;
+  padding-left: 10px;
+}
+
+#addCar_manufacturer div {
+  color: #17a2b8;
+  background-color: #343a40 !important;
+  border-color: #17a2b8;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}
+
+#carDetails_manufacturer div {
+  color: #17a2b8;
+  background-color: #495057 !important;
+  border-color: #17a2b8;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}

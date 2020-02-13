@@ -129,6 +129,7 @@ router.post("/invoice/:id", (req, res) => {
 // PUT /api/myCars/:id
 router.put("/:id", (req, res) => {
   let carId = req.params.id;
+  console.log("Backend put /:id ", carId);
 
   Car.findById(carId)
     .then(returnedCar => {

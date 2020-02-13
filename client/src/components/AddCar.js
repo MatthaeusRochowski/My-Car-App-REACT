@@ -2,6 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Form, Button, Col } from "react-bootstrap";
 import service from "../services/upload.js";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Select from 'react-select';
+import { manufacturer } from '../services/manufacturer';
+
+const options = manufacturer();
 
 class AddCar extends Component {
   state = {
@@ -27,6 +33,23 @@ class AddCar extends Component {
     file: "",
     error: ""
   };
+
+  onHerstellerChange = (selectedHersteller) => {
+    let carCopy = this.state.car;
+    carCopy.hersteller = selectedHersteller.value
+    this.setState({ car: carCopy });
+    console.log('Selected Hersteller: ', selectedHersteller.value);
+  };
+
+  onKaufdatumChange = (date) => {
+    let kaufdatenCopy = this.state.car.kaufdaten;
+    kaufdatenCopy.kaufdatum = (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear());
+    this.setState({ 
+      kaufdatum: (String(date.getDate()).padStart(2, '0') + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + date.getFullYear())
+    })
+    console.log('Picked Kaufdatum: ', date);
+    console.log('updated kaufdaten: ', this.state.car.kaufdaten)
+  }
 
   handleChange = event => {
     let { name, value } = event.target;
@@ -114,13 +137,18 @@ class AddCar extends Component {
             />
             </Col>
             <Col>
-            <Form.Control className="formInput"
-              type="text"
-              name="hersteller"
-              placeholder="Hersteller"
-              value={this.state.car.hersteller}
-              onChange={this.handleChange}
-            />
+              <div id='addCar_manufacturer'>
+                <Select
+                  name='hersteller'
+                  value={this.state.car.hersteller}
+                  placeholder={this.state.car.hersteller}
+                  onChange={this.onHerstellerChange}
+                  options={options}
+                  isDisabled={false}
+                  isSearchable={true}
+                  isRtl={true}
+                />
+              </div>
             </Col>
             </Form.Row>
             <Form.Row>
@@ -183,14 +211,16 @@ class AddCar extends Component {
             />
             </Col>
             </Form.Row>
-            
-            <Form.Control className="formInput"
-              type="text"
-              name="kaufdatum"
-              placeholder="Kaufdatum"
-              value={this.state.car.kaufdaten.kaufdatum}
-              onChange={this.handleChange}
-            />
+            <Form.Row>
+            <Col>
+              <DatePicker
+                id='date_pick_carAdd'
+                onChange={this.onKaufdatumChange}
+                value={this.state.car.kaufdaten.kaufdatum}
+                disabled={false}
+              />
+            </Col>
+            </Form.Row>
             <Form.Row>
               <Col>
             <Form.Control className="formInput"
