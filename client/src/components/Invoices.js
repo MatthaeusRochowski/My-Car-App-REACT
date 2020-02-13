@@ -123,23 +123,23 @@ export default class Invoices extends Component {
       <div>  
         <h4>Rechnungen</h4>
         {this.state.editActive === false && (
-          <Button onClick={this.toggleEdit}>Rechnung ändern</Button>
+          <Button variant="info" onClick={this.toggleEdit}>Rechnung ändern</Button>
         )}
         {this.state.editActive && (
-          <Button onClick={this.handleSubmit} type="submit">
+          <Button variant="info" onClick={this.handleSubmit} type="submit">
             Speichern
           </Button>
         )}
         {this.state.editActive && (
           <Button
-            type="reset"
+            variant="info"
             className="btn btn-default pull-right"
             onClick={this.handleCancel}
           >
             Abbrechen
           </Button>
         )}
-        <Table striped bordered hover variant="dark">
+        <Table id="invoiceTable" striped bordered hover variant="dark">
           <thead>
             <tr>
               <th>Datum</th>

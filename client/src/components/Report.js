@@ -1,38 +1,20 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Chart from "chart.js";
-import { Bar, defaults } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
+import { Form, Col } from "react-bootstrap";
+import dateOperator from "../services/dateOperator";
+import { valueLossYear } from '../services/valueloss';
 
-/* const data = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "My First dataset",
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: "rgba(75,192,192,0.4)",
-      borderColor: "rgba(75,192,192,1)",
-      borderCapStyle: "butt",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      pointBorderColor: "rgba(75,192,192,1)",
-      pointBackgroundColor: "#fff",
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(75,192,192,1)",
-      pointHoverBorderColor: "rgba(220,220,220,1)",
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [65, 59, 80, 81, 56, 55, 40]
-    }
-  ]
-}; */
+const date = new Date();
 
 export default class Invoices extends Component {
   state = {
-    invoices: []
+    invoices: [],
+    chart: "Kosten Verteilung",
+    timeFilter: "Seit Kaufdatum",
+    filteredYear: 0,
+    filteredMonth: 0
   };
 
   getData = () => {
@@ -40,6 +22,11 @@ export default class Invoices extends Component {
       .get(`/api/myCars/${this.props.carId}`)
       .then(response => {
         console.log("Invoices -----> Axios Call ----> Get Data", response);
+        //add value loss to invoice book 
+          let valueLossArr = valueLossYear(response.data);
+          for (let loss of valueLossArr) {
+            response.data.rechnungen.push(loss);
+          }
         this.setState({
           invoices: response.data.rechnungen
         });
@@ -58,101 +45,169 @@ export default class Invoices extends Component {
   }
 
   aggregateCosts = (objArray, rechnungstyp) => {
+    const filteredYear = this.state.filteredYear;
+    const filteredMonth = this.state.filteredMonth;
+
     return objArray
       .slice()
       .map(invoice => {
-        return invoice.rechnungstyp === rechnungstyp && invoice.betrag;
+        return (
+          ((dateOperator(invoice.datum).year === filteredYear &&
+          dateOperator(invoice.datum).month > filteredMonth) || (dateOperator(invoice.datum).year > filteredYear)) &&
+          invoice.rechnungstyp === rechnungstyp &&
+          invoice.betrag
+        );
       })
       .reduce((acc, curValue) => {
         return (acc += curValue);
       });
   };
 
+  handleTimeFilter = event => {
+    switch (event.target.value) {
+      case "Seit Kaufdatum":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: 0,
+          filteredMonth: 0
+        });
+        break;
+      case "Letztes Jahr":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: parseInt(date.getFullYear() - 1),
+          filteredMonth: parseInt(date.getMonth() + 1)
+        });
+        break;
+      case "Letzte 3 Jahre":
+        this.setState({
+          [event.target.name]: event.target.value,
+          filteredYear: parseInt(date.getFullYear() - 3),
+          filteredMonth: parseInt(date.getMonth() + 1)
+        });
+        break;
+    }
+  };
+
+  selectChart = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
   render() {
+    console.log("Report -----> rendered", this.state.invoices);
+
     let sumTanken = 0;
     let sumVersicherung = 0;
     let sumWerkstatt = 0;
     let sumSteuer = 0;
+    let sumWertverlust = 0;
     let sumKosten = [];
 
-    console.log("Report -----> rendered", this.state.invoices);
-
-    // Kostenberechnung
+    // Kostenauswertung
 
     // Summe aller Kosten nach Rechnungstyp
     if (this.state.invoices.length > 0) {
-      sumTanken = this.aggregateCosts(this.state.invoices, "Tanken");
-      sumVersicherung = this.aggregateCosts(
-        this.state.invoices,
-        "Versicherung"
-      );
+      sumTanken = this.aggregateCosts(this.state.invoices,"Tanken" );
+      sumVersicherung = this.aggregateCosts(this.state.invoices, "Versicherung");
       sumWerkstatt = this.aggregateCosts(this.state.invoices, "Werkstatt");
       sumSteuer = this.aggregateCosts(this.state.invoices, "Steuer");
+      sumWertverlust = this.aggregateCosts(this.state.invoices, "Wertverlust");
 
       sumKosten = [
         { Tanken: sumTanken },
         { Versicherung: sumVersicherung },
         { Werkstatt: sumWerkstatt },
-        { Steuer: sumSteuer }
+        { Steuer: sumSteuer },
+        { Wertverlust: sumWertverlust}
       ];
     }
 
-    console.log("aggregierte Kosten:", sumKosten);
-    console.log(
-      "Kosten Object Keys:",
-      sumKosten.map(element => Object.keys(element))
-    );
-
-    const data = {
+    // Daten für Chart
+    const data = { 
+      labels: ["Tanken", "Werkstatt", "Versicherung", "Steuer", "Wertverlust"],
       datasets: [
         {
-          label: ["Tanken", "Steuer"],
-          backgroundColor: [
-            "rgba(255, 0, 0, 0.7)",
-          ],
-          data: [sumTanken]
-        },
-        {
-          label: ["Werkstatt"],
-          backgroundColor: [
-            "rgba(0, 255, 0, 0.7)"
-          ],
-          data: [sumWerkstatt]
-        },
-        {
-          label: ["Versicherung"],
-          backgroundColor: [
-            "rgba(0, 0, 255, 0.7)"
-          ],
-          data: [sumVersicherung]
-        }
-        ,
-        {
-          label: ["Steuer"],
-          backgroundColor: [
-            "rgba(255, 0, 120, 0.7)"
-          ],
-          data: [sumSteuer]
+          label: "Kosten Verteilung",
+          backgroundColor: ["#4682B4", "#B0C4DE", "#ADD8E6", "#87CEFA", "#5F9EA0"],
+          data: [sumTanken, sumWerkstatt, sumVersicherung, sumSteuer, sumWertverlust]
         }
       ],
+      options: {
+        title: {
+          display: true,
+          text: "Kosten Verteilung: " + [this.state.timeFilter],
+          fontColor: "white",
+          fontSize: 22
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            // This more specific font property overrides the global property
+            fontColor: "white",
+            fontSize: 16,
+            padding: 15
+          }
+        },
+        responsive: true
+      }
     };
 
-    const options = {
+    /*     const options = {
       scales: {
-          yAxes: [{
+        yAxes: [
+          {
             ticks: {
               beginAtZero: true
             }
-          }]
+          }
+        ]
       }
-  }
+    }; */
 
     //console.log(betrag);
     return (
       <div>
-        <h4>Kosten Auswertung</h4>
+        <div>
+          <Form className="chartFilter">
+            <Form.Control
+              className="chartSelectBox"
+              as="select"
+              name="chart"
+              onChange={this.selectChart}
+            >
+              <option>Kosten Verteilung</option>
+              <option>Kilometer Kosten</option>
+            </Form.Control>
 
-        <Bar width={900} height={600} ref="chart" data={data} options={options}/>
+            <Form.Control
+              className="chartSelectBox"
+              as="select"
+              name="timeFilter"
+              onChange={this.handleTimeFilter}
+            >
+              <option>Seit Kaufdatum</option>
+              <option>Letztes Jahr</option>
+              <option>Letzte 3 Jahre</option>
+            </Form.Control>
+          </Form>
+
+          {this.state.chart === "Kosten Verteilung" && (
+            <div id="pieChart">
+            <Pie
+              width={900}
+              height={600}
+              ref="chart"
+              data={data}
+              options={data.options}
+              plugins={data.plugins}
+              responsive={true}
+              
+            />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
