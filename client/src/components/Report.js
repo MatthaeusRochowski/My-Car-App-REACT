@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Chart from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
-import { Form, Col } from "react-bootstrap";
+import { Pie } from "react-chartjs-2";
+import { Form, Button } from "react-bootstrap";
 import dateOperator from "../services/dateOperator";
 import { valueLossYear } from '../services/valueloss';
 
@@ -196,17 +195,23 @@ export default class Invoices extends Component {
           {this.state.chart === "Kosten Verteilung" && (
             <div id="pieChart">
             <Pie
-              width={900}
-              height={600}
+              width={800}
+              height={500}
               ref="chart"
               data={data}
               options={data.options}
               plugins={data.plugins}
               responsive={true}
-              
             />
             </div>
           )}
+          
+          {this.state.chart === "Kilometer Kosten" &&
+          <div style={{margin: '10vh'}}>
+          <h3>Vollversion Kaufen</h3>
+          <Button variant="danger" type="submit">1,99 EUR / Monat</Button>
+          </div>}
+          
         </div>
       </div>
     );
