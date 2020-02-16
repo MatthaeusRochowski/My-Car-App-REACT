@@ -4,8 +4,8 @@ import { Alert, Form, Button } from "react-bootstrap";
 
 class Login extends Component {
   state = {
-    username: "",
-    password: "",
+    username: "vielfahrer",
+    password: "123456789",
     error: ""
   };
 
